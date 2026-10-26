@@ -1,0 +1,12 @@
+<!doctype html>
+<html><head><title>Sec fixture</title>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.example.net; connect-src 'self' http://localhost:8080 https://*.sharepoint.com">
+<script>/* fake values, assembled at runtime so no secret-shaped literal is committed */window.__INITIAL_STATE__={apiKey:"AI"+"zaSyA1234567890abcdefghijklmnopqrstuv",session:"ey"+"JhbGciOiJIUzI1NiJ9.ey"+"JzdWIiOiIxMjM0NTY3ODkwIn0.abcdefghijklmnopqrstuvwxyz"};localStorage.setItem('auth_token','ey'+'JhbGciOiJIUzI1NiJ9.ey'+'J1c2VyIjoxfQ.signaturesignature');document.cookie='sessionid=abc123';</script>
+<script src="app.js"></script>
+</head><body>
+<form method="get" action="http://insecure.example/login"><input name="u"><input type="password" name="p"></form>
+<form method="post"><input type="hidden" name="csrf_token" value="x"><input name="q"></form>
+<a href="https://other.example" target="_blank" rel="">ext</a>
+<iframe src="https://maps.example.org/embed"></iframe>
+<button onclick="alert(1)">x</button>
+</body></html>

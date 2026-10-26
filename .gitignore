@@ -3,3 +3,4 @@ reports/
 tests/**/app.js.map
 __pycache__/
 .DS_Store
+tests/**/app.js
