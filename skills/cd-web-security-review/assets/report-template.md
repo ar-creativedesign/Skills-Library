@@ -3,7 +3,7 @@
 ```markdown
 # {Site name} – Security Review
 
-{date} · OWASP Top 10:2025 · mode: {live|code|both} · test level: {passive|light-active} · {agent/model} · skill: cd-web-security-review v1.1.0
+{date} · OWASP Top 10:2025 · mode: {live|code|both} · test level: {passive|light-active} · {agent/model} · skill: cd-web-security-review v1.2.0
 
 > Authorisation: {as given}. Non-destructive review. Not a penetration test.
 
@@ -14,9 +14,10 @@ Fix these first: {3–5 numbered items with IDs}
 
 ## Scope and method
 Hosts in scope, pages reviewed, date and time, tools (browser, curl/openssl/dig), test level, requests sent.
+Standards: OWASP Top 10:2025 and ASVS 5.0 (checked current on {date} / not re-checked). {Any newer edition noted.}
 
 ## Findings
-| ID | Finding | Severity | Confidence | OWASP 2025 | Affected | Found by | Source (file:line) | Evidence | Remediation |
+| ID | Finding | Severity | Confidence | OWASP 2025 | ASVS 5.0 | Affected | Found by | Source (file:line) | Evidence | Remediation | Reference |
 
 ## Security headers scorecard
 | Header | Value seen | Verdict | Recommended value |
@@ -40,6 +41,12 @@ Hosts in scope, pages reviewed, date and time, tools (browser, curl/openssl/dig)
 ## What passed
 {Positive controls observed}
 
+## ASVS coverage summary
+| ASVS 5.0 chapter | Reviewed? (live / code / not covered) | Findings |
+
+## Sources
+{Standards used, with the date checked; cheat sheets, MDN pages and advisories cited}
+
 ## Needs an authorised penetration test
 {Suspected items, plus the OWASP areas this review cannot cover}
 
@@ -51,6 +58,7 @@ Hosts in scope, pages reviewed, date and time, tools (browser, curl/openssl/dig)
 - **Finding:** what and where, with the measured value. Example: "CSP `connect-src` includes `http://localhost:8080` (development leftover)".
 - **Evidence:** the command plus 1–3 response lines, a screenshot, or Kit output, with secrets redacted.
 - **Found by / Source:** `live`, `code` or `both`, and the file:line (or config) that causes it where known.
+- **ASVS / Reference:** the ASVS 5.0 chapter (e.g. `V3`), plus a link to the most relevant OWASP cheat sheet or MDN page; for dependencies, the GHSA/CVE advisory.
 - **Remediation:** a concrete config or code change. Example: "Add `Strict-Transport-Security: max-age=31536000; includeSubDomains` at the CDN/nginx". Name the layer to change (CDN, nginx, framework config, CMS).
 - Keep sentences short, use specifics rather than adjectives, use UK English, no padding, and never include full secrets.
 

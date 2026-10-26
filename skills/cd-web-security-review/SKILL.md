@@ -2,7 +2,7 @@
 name: cd-web-security-review
 description: Run a non-destructive security review against the OWASP Top 10:2025. Live mode checks a running site with a real browser and safe terminal commands (HTTPS/TLS, headers, CSP, cookies, client-side secrets, third-party scripts, exposed files, consent, DNS/email). Code mode reviews the codebase (secrets and git history, injection sinks, access control, auth, config, dependencies, CI, hosting rules). With both, it ties each live issue to its source. Writes a prioritised report. Use when asked for a security, vulnerability, hardening or OWASP check of a site or codebase the user owns or is authorised to test. Not a penetration test.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Web security review (OWASP Top 10:2025, live site and codebase, non-destructive)
@@ -25,15 +25,16 @@ Files in this skill (paths relative to this folder):
 | `references/commands.md` | Terminal commands, the fixed exposure-path list, and the light-active checks. |
 | `references/owasp-2025.md` | OWASP 2025 mapping, general protection checks, severity rubric and the Kit reference. |
 | `references/browser-tools.md` | How to map each action onto Claude or Antigravity tools. Read it first. |
+| `references/sources.md` | Official sources: standards status (OWASP Top 10:2025, ASVS 5.0), the ASVS chapter mapping, cheat sheets, MDN header pages, advisory databases. Use it for the Phase 0 standards check and for the Reference link on every finding. |
 | `assets/report-template.md` | Report structure and how to write each finding. Read it before writing. |
 
 ## Show that this skill is in use (required)
 
 So the team can see which skill produced a result:
 
-1. **First line of your first reply:** `Skill: cd-web-security-review v1.1.0`, on its own line, then one sentence on what you're about to do.
-2. **Report byline:** include `skill: cd-web-security-review v1.1.0` (the template already has a slot for it).
-3. **Final message:** end with `Skill: cd-web-security-review v1.1.0`.
+1. **First line of your first reply:** `Skill: cd-web-security-review v1.2.0`, on its own line, then one sentence on what you're about to do.
+2. **Report byline:** include `skill: cd-web-security-review v1.2.0` (the template already has a slot for it).
+3. **Final message:** end with `Skill: cd-web-security-review v1.2.0`.
 
 If you are only partly following this skill (for example the user asked for just one check), still add the stamp and say which parts you ran.
 
@@ -95,6 +96,13 @@ Take what you need from the user's message and use these defaults for the rest. 
 
 ## 4. Procedure
 
+**Phase 0: Standards check** (every mode, about a minute).
+1. Read `references/sources.md` → "Standards status".
+2. If you can search the web, confirm the OWASP Top 10 is still the 2025 edition and ASVS is still 5.0.
+3. Record the result and the date in the report's Scope section.
+4. If a newer edition has been released, tell the user straight away. Keep mapping to the edition this skill uses unless they ask to switch.
+5. With no web access, say "standards not re-checked; using the versions in sources.md (last reviewed <date>)".
+
 Phases 1–5 are live mode. In code-only mode, skip to Phase 5b. In both mode, run them all.
 
 **Phase 1: Discover (passive).**
@@ -154,6 +162,7 @@ If the scanner reports a live-looking secret, **alert the user immediately** bef
 - an OWASP 2025 category
 - a confidence
 - **Found by** (live / code / both) and a **Source** (file:line) where known
+- a **Reference**: the ASVS 5.0 chapter, plus the most relevant OWASP cheat sheet or MDN page (see `references/sources.md`), and the advisory link for dependency findings
 
 **Phase 7: Verify.**
 1. Re-test every finding once with a fresh request or page load, and drop anything you can't reproduce.

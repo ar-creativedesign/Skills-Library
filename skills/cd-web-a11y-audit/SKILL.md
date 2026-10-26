@@ -2,7 +2,7 @@
 name: cd-web-a11y-audit
 description: Audit a website for accessibility against WCAG 2.2 AA. Live mode drives a real browser (keyboard, zoom, reflow, text spacing, contrast, screen sizes); code mode reviews the codebase (components, CSS, router, templates); with both it ties each live issue to the file that causes it. Writes an evidence-based report with severity, WCAG reference, page, viewport, source and fix. Use when asked for an accessibility audit, WCAG or a11y check or review of a website, URL, web app or front-end codebase.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Web accessibility audit (WCAG 2.2 AA, live site and codebase)
@@ -22,15 +22,16 @@ Files in this skill (paths relative to this folder):
 | `references/code-review.md` | Code mode: orientation, scanner, existing tooling, manual checklist, how to tie live findings to source. |
 | `references/checklist.md` | The WCAG 2.2 AA criteria: what to test and what passes. Read it before Phase 3. |
 | `references/browser-tools.md` | How to map each action onto Claude or Antigravity browser tools. Read it first. |
+| `references/sources.md` | Official sources: standards status, per-criterion WCAG Understanding links, ARIA patterns. Use it for the Phase 0 standards check and for the Reference link on every finding. |
 | `assets/report-template.md` | Report structure and how to write each finding. Read it before Phase 6. |
 
 ## Show that this skill is in use (required)
 
 So the team can see which skill produced a result:
 
-1. **First line of your first reply:** `Skill: cd-web-a11y-audit v1.1.0`, on its own line, then one sentence on what you're about to do.
-2. **Report byline:** include `skill: cd-web-a11y-audit v1.1.0` (the template already has a slot for it).
-3. **Final message:** end with `Skill: cd-web-a11y-audit v1.1.0`.
+1. **First line of your first reply:** `Skill: cd-web-a11y-audit v1.2.0`, on its own line, then one sentence on what you're about to do.
+2. **Report byline:** include `skill: cd-web-a11y-audit v1.2.0` (the template already has a slot for it).
+3. **Final message:** end with `Skill: cd-web-a11y-audit v1.2.0`.
 
 If you are only partly following this skill (for example the user asked for just one check), still add the stamp and say which parts you ran.
 
@@ -98,6 +99,13 @@ Record the real size you got (`document.documentElement.clientWidth/clientHeight
 
 ## 5. Procedure
 
+**Phase 0: Standards check** (every mode, about a minute).
+1. Read `references/sources.md` → "Standards status".
+2. If you can search the web, confirm WCAG 2.2 is still the current W3C Recommendation, WCAG 3.0 is still a draft, and the current EN 301 549 version.
+3. Record the result and the date in the report's Scope section.
+4. If something newer has been finalised, tell the user straight away. Keep auditing against WCAG 2.2 AA unless they ask to switch.
+5. With no web access, say "standards not re-checked; using the versions in sources.md (last reviewed <date>)".
+
 Phases 1–3 are live mode. In code-only mode, skip to Phase 3b. In both mode, run them all.
 
 **Phase 1: Discover.**
@@ -147,6 +155,7 @@ Use `__a11y.focusNow()` after real Tab presses to get the ring contrast and to s
   - scripted focus not showing `:focus-visible`
 - **Check text over images by eye.**
 - **Record how it was found.** Give each finding **Found by** (live / code / both) and a **Source** (file:line) where known.
+- **Add a Reference.** Link the WCAG Understanding page for each criterion broken (slugs in `references/sources.md`), plus an ARIA APG pattern when the fix is a widget pattern.
 - **Assign severity and IDs.** Use the rubric below. IDs are `SW-01` for site-wide, then a short prefix per page (`HM-01` home, `PR-01` product…).
 
 | Severity | Use when |
