@@ -66,7 +66,8 @@ Take what you need from the user's message and use these defaults for the rest. 
 | Output folder | `reports/cd-web-security-review/` (see below) | a different path |
 
 **Output folder (every run starts clean).** Unless the user gave another path, all output goes in `reports/cd-web-security-review/`, relative to the folder you're working in:
-- `reports/cd-web-security-review/report.md`: the report.
+- `reports/cd-web-security-review/report.md`: the report, ending with the action plan.
+- `reports/cd-web-security-review/actions.json`: the action plan as data, for turning into tickets.
 - `reports/cd-web-security-review/evidence/`: screenshots, command output (secrets redacted) and scanner JSON.
 
 Before you write anything, empty `reports/cd-web-security-review/` so no files from an earlier run are left behind. Old reports aren't kept. Only ever clear this one folder: never the rest of `reports/`, other skills' folders or anything else in the project. If the user gave a different path, write there and don't delete anything. If you can't delete files, overwrite `report.md`, say which old files remain, and carry on.
@@ -178,6 +179,7 @@ If the scanner reports a live-looking secret, **alert the user immediately** bef
 **Phase 8: Report.**
 1. Read `assets/report-template.md`.
 2. Write `report.md` and save evidence in `evidence/`, in the output folder you cleared in section 2.
-3. Tell the user, in two or three sentences: any critical exposure first, then the counts by severity and the top fixes. Then give the report location.
+3. Build the action plan last, from the triaged findings: group shared fixes, prioritise, size the effort, and check every finding is covered. Write it as the final section of `report.md` and as `actions.json`.
+4. Tell the user, in two or three sentences: any critical exposure first, then the counts by severity and the top three actions. Then give the report location.
 
 If your environment has a better place for a shareable report (a document or artifact), you may publish there too. Never include unredacted secrets anywhere.

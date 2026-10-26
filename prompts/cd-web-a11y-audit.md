@@ -168,7 +168,7 @@ Before writing, re-test **every** issue on a fresh page load at the viewport it 
 
 ### Phase 6: Report
 
-Before writing, empty `reports/cd-web-a11y-audit/` (that folder only) so nothing from an earlier run is left; old reports aren't kept. If `REPORT_FILE` was changed to another location, don't delete anything. Then write `REPORT_FILE` in Markdown (Obsidian-friendly) and save screenshots in `EVIDENCE_DIR`, using the template below. If your environment offers a shareable document or artifact, you may publish it there too.
+Before writing, empty `reports/cd-web-a11y-audit/` (that folder only) so nothing from an earlier run is left; old reports aren't kept. If `REPORT_FILE` was changed to another location, don't delete anything. Then write `REPORT_FILE` in Markdown (Obsidian-friendly) and save screenshots in `EVIDENCE_DIR`, using the template below. Build the action plan last and also write it as `actions.json` next to `REPORT_FILE`. If your environment offers a shareable document or artifact, you may publish it there too.
 
 ## Severity rubric
 
@@ -252,7 +252,7 @@ Process items (accessibility in the definition of done, design annotations, a WC
 | Severity | Count |
 | --- | --- |
 
-Fix these first: {3–5 numbered items with IDs, one line each}
+Start with: {the top 3 actions from the action plan, one line each}
 
 ## Scope and method
 Pages tested: {list}. Browser: {name/version}. Date and time.
@@ -260,10 +260,10 @@ Pages tested: {list}. Browser: {name/version}. Date and time.
 Automated checks and interactive checks performed. Re-test: {what was confirmed or dropped}.
 
 ## Site-wide issues
-| ID | Issue | Severity | Guidance broken | Pages | Size / zoom | Evidence | Remediation |
+| ID | Issue | Severity | Guidance broken | Pages | Size / zoom | Evidence | Fix (one line) |
 
 ## {Page name} ({path})
-| ID | Issue | Severity | Guidance broken | Size / zoom | Evidence | Remediation |
+| ID | Issue | Severity | Guidance broken | Size / zoom | Evidence | Fix (one line) |
 (one section per page or template; "No page-specific issues" if none)
 
 ## Evidence
@@ -274,6 +274,14 @@ Automated checks and interactive checks performed. Re-test: {what was confirmed 
 
 ## Not covered
 {Screen readers, PDFs, other browsers/devices, pages behind login, contrast over images, etc.}
+
+## Action plan
+| # | Priority | Action | Resolves | Owner | Effort | Agent-ready | Verify by |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| A1 | P1 | {what to change and where} | ACC-03, ACC-07 | {owner} | S | Yes | {concrete check} |
+
+**Effort:** S ≤ 2h · M ≤ 1 day · L ≤ 3 days · XL needs scoping. **Agent-ready:** Yes / Partial / No.
+**Totals:** {n} actions resolve {N} findings · P1: {a} · P2: {b} · P3: {c} · P4: {d} · Agent-ready: {y} yes, {p} partial, {x} no
 ```
 
 **How to write each finding:**
@@ -281,8 +289,52 @@ Automated checks and interactive checks performed. Re-test: {what was confirmed 
 - **Guidance broken:** the WCAG number and name, plus the checklist item in brackets.
 - **Size / zoom:** the matrix label(s) where it fails, or "All".
 - **Evidence:** a screenshot file and/or the measurement.
-- **Remediation:** a concrete fix aimed at the component or CSS rule, for example "Replace `height` with `min-height` on `.hero`; remove `overflow:hidden`". Quote the root-cause rule from `focusRules()` or computed styles where you found it.
+- **Fix (one line):** the change in a few words, for example "Use `min-height` on `.hero`". The detail goes in the action plan.
 - Keep sentences short, use specifics rather than adjectives, use UK English, and never pad.
+
+**How to write the action plan** (the last section; build it from the triaged findings):
+- **Group** findings that share a fix (same CSS rule, config file, component or import preset) into one action, and list every ID in **Resolves**. One finding can appear in more than one action if it needs several changes.
+- **Every finding is covered.** Before finishing, check that each finding ID appears in at least one action. Info-only findings may be left out; say so under the table.
+- **Priority:**
+  - **P1:** any Critical, or a High with effort S
+  - **P2:** the other Highs
+  - **P3:** Medium
+  - **P4:** Low, Info and tooling/process improvements
+
+  An action takes the highest priority any of its findings would get. Within a priority, order by reach (how many pages, users or assets), then cheapest first.
+- **Action:** imperative and specific: what to change, where (file, rule, setting or layer) and to what. Example: "Replace `height` with `min-height` on `.hero` and remove `overflow:hidden`". Quote the root-cause rule from `focusRules()` or computed styles where you found it.
+- **Owner:** Dev (front end), Dev (back end), Design, Content or Vendor (third-party component).
+- **Effort:** developer time for someone who knows the codebase, including testing. Not AI time. If unsure, round up and say why in the action.
+- **Agent-ready:**
+  - **Yes:** an agent with repo access can make and test the change.
+  - **Partial:** an agent can draft it, but a person must decide, approve or do part of it. Give the reason in brackets.
+  - **No:** it needs a person, the editor/tool UI or a third party. Give the reason in brackets.
+- **Verify by:** a concrete check a person or a re-run can do, with the page, viewport, command or setting.
+
+**Also write `actions.json`** next to the report, with the same actions:
+
+```json
+{
+  "skill": "<name> v<version>",
+  "target": "<site or project>",
+  "date": "YYYY-MM-DD",
+  "actions": [
+    {
+      "id": "A1",
+      "priority": "P1",
+      "title": "<short title>",
+      "action": "<the full action text>",
+      "resolves": ["<ID>"],
+      "owner": "<owner>",
+      "effort": "S",
+      "agent_ready": "yes",
+      "agent_note": "",
+      "files": ["<path:line>"],
+      "verify": "<verify by>"
+    }
+  ]
+}
+```
 
 ## Audit Kit (inject into each page with your JavaScript tool)
 

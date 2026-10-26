@@ -60,5 +60,5 @@ install.sh · install.ps1 · build-dist.sh
 - The folder and `name:` start with `cd-` and match.
 - `metadata.version` uses semantic versioning (`1.0.0`).
 - The skill tells the agent to stamp `Skill: <name> v<version>` on its first reply, in its output and in its final message.
-- Output goes in `reports/<skill-name>/` (`report.md` plus `evidence/`). Each run empties that folder first; no history is kept.
+- Output goes in `reports/<skill-name>/`: `report.md` (ending with a prioritised **Action plan**), `actions.json` and `evidence/`. Each run empties that folder first; no history is kept.
 - No secrets in the repo. Skills that touch external systems must say what they may and may not do.

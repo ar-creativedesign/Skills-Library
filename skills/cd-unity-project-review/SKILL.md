@@ -36,7 +36,8 @@ Files in this skill (paths relative to this folder):
 | Output folder | `reports/cd-unity-project-review/` (see below) | a different path |
 
 **Output folder (every run starts clean).** Unless the user gave another path, all output goes in `reports/cd-unity-project-review/`, relative to the folder you're working in:
-- `reports/cd-unity-project-review/report.md`: the report.
+- `reports/cd-unity-project-review/report.md`: the report, ending with the action plan.
+- `reports/cd-unity-project-review/actions.json`: the action plan as data, for turning into tickets.
 - `reports/cd-unity-project-review/evidence/`: the scanner JSON and any command output.
 
 Before you write anything, empty `reports/cd-unity-project-review/` so no files from an earlier run are left behind. Old reports aren't kept. Only ever clear this one folder: never the rest of `reports/`, other skills' folders or anything else in the project. If the user gave a different path, write there and don't delete anything. If you can't delete files, overwrite `report.md`, say which old files remain, and carry on.
@@ -74,4 +75,4 @@ Before you write anything, empty `reports/cd-unity-project-review/` so no files 
    | Info | Facts and observations, including things done well. |
 
 5. **Verify.** Re-open the evidence for every Critical/High finding before writing.
-6. **Report.** Use `assets/report-template.md`. Then tell the user, in two or three sentences, the overall health, the counts by severity and the top three fixes. Give the report location.
+6. **Report.** Use `assets/report-template.md`. Build the action plan last, from the triaged findings: group shared fixes, prioritise, size the effort, and check every finding is covered. Write it as the final section of `report.md` and as `actions.json`. Then tell the user, in two or three sentences, the overall health, the counts by severity and the top three actions. Give the report location.

@@ -11,7 +11,7 @@ Used by `SKILL.md` when you have the project's source code. Code mode finds the 
    - **Test tools:** `@axe-core/playwright`, `jest-axe`, `cypress-axe`, Lighthouse CI.
    - **CI steps** that run any of them.
 
-   Missing tooling is a process finding, not a WCAG one. Report it under recommendations.
+   Missing tooling is a process issue, not a WCAG one. Add it to the action plan as a P4 action.
 
 ## 2. Run the scanner
 
