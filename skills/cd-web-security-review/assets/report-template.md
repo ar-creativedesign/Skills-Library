@@ -90,31 +90,6 @@ Standards: OWASP Top 10:2025 and ASVS 5.0 (checked current on {date} / not re-ch
 - **Verify by:** a concrete check a person or a re-run can do, with the page, viewport, command or setting.
 - **Exposed secrets:** the first action is always "Rotate the credential", P1, owner Dev or DevOps, Agent-ready: No. Removing it from code and history is a separate action.
 - **Needs an authorised penetration test:** add one action for the items in that section, owner Security, Agent-ready: No.
-- Never put a full secret in an action or in `actions.json`.
-
-**Also write `actions.json`** next to the report, with the same actions:
-
-```json
-{
-  "skill": "<name> v<version>",
-  "target": "<site or project>",
-  "date": "YYYY-MM-DD",
-  "actions": [
-    {
-      "id": "A1",
-      "priority": "P1",
-      "title": "<short title>",
-      "action": "<the full action text>",
-      "resolves": ["<ID>"],
-      "owner": "<owner>",
-      "effort": "S",
-      "agent_ready": "yes",
-      "agent_note": "",
-      "files": ["<path:line>"],
-      "verify": "<verify by>"
-    }
-  ]
-}
-```
+- Never put a full secret in an action.
 
 **Write the report to** `reports/cd-web-security-review/report.md` (or the path the user gave). **Save evidence** (screenshots, command output with secrets redacted) in `evidence/` beside it, linked with relative paths (`evidence/headers.txt`).

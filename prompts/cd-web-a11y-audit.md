@@ -168,7 +168,7 @@ Before writing, re-test **every** issue on a fresh page load at the viewport it 
 
 ### Phase 6: Report
 
-Before writing, empty `reports/cd-web-a11y-audit/` (that folder only) so nothing from an earlier run is left; old reports aren't kept. If `REPORT_FILE` was changed to another location, don't delete anything. Then write `REPORT_FILE` in Markdown (Obsidian-friendly) and save screenshots in `EVIDENCE_DIR`, using the template below. Build the action plan last and also write it as `actions.json` next to `REPORT_FILE`. If your environment offers a shareable document or artifact, you may publish it there too.
+Before writing, empty `reports/cd-web-a11y-audit/` (that folder only) so nothing from an earlier run is left; old reports aren't kept. If `REPORT_FILE` was changed to another location, don't delete anything. Then write `REPORT_FILE` in Markdown (Obsidian-friendly) and save screenshots in `EVIDENCE_DIR`, using the template below. Build the action plan last, as the final section of the report. If your environment offers a shareable document or artifact, you may publish it there too.
 
 ## Severity rubric
 
@@ -310,31 +310,6 @@ Automated checks and interactive checks performed. Re-test: {what was confirmed 
   - **Partial:** an agent can draft it, but a person must decide, approve or do part of it. Give the reason in brackets.
   - **No:** it needs a person, the editor/tool UI or a third party. Give the reason in brackets.
 - **Verify by:** a concrete check a person or a re-run can do, with the page, viewport, command or setting.
-
-**Also write `actions.json`** next to the report, with the same actions:
-
-```json
-{
-  "skill": "<name> v<version>",
-  "target": "<site or project>",
-  "date": "YYYY-MM-DD",
-  "actions": [
-    {
-      "id": "A1",
-      "priority": "P1",
-      "title": "<short title>",
-      "action": "<the full action text>",
-      "resolves": ["<ID>"],
-      "owner": "<owner>",
-      "effort": "S",
-      "agent_ready": "yes",
-      "agent_note": "",
-      "files": ["<path:line>"],
-      "verify": "<verify by>"
-    }
-  ]
-}
-```
 
 ## Audit Kit (inject into each page with your JavaScript tool)
 

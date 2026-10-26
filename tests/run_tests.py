@@ -55,7 +55,7 @@ def structure(skill):
         if rpt.exists():
             check(f"skill: {stamp}" in rpt.read_text(encoding="utf-8"), f"{skill.name}: report template carries the stamp")
             rtxt = rpt.read_text(encoding="utf-8")
-            check("## Action plan" in rtxt and "actions.json" in rtxt, f"{skill.name}: report template has an action plan and actions.json")
+            check("## Action plan" in rtxt, f"{skill.name}: report template has an action plan")
     for ref in sorted(set(re.findall(r"`((?:scripts|references|assets)/[\w./-]+)`", md))):
         check((skill / ref).exists(), f"{skill.name}: referenced file {ref} exists")
     if shutil.which("node"):

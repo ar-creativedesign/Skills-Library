@@ -69,29 +69,4 @@ Start with: {the top 3 actions from the action plan, one line each}
 - **Tooling and process** (asmdefs, analyzers, LFS, tests in CI, Data Validation, clang-format): add these as P4 actions unless a finding makes them more urgent.
 - Fixes that need the editor (reimports, Blueprint changes, redirector fix-up) are Agent-ready: **No** or **Partial**.
 
-**Also write `actions.json`** next to the report, with the same actions:
-
-```json
-{
-  "skill": "<name> v<version>",
-  "target": "<site or project>",
-  "date": "YYYY-MM-DD",
-  "actions": [
-    {
-      "id": "A1",
-      "priority": "P1",
-      "title": "<short title>",
-      "action": "<the full action text>",
-      "resolves": ["<ID>"],
-      "owner": "<owner>",
-      "effort": "S",
-      "agent_ready": "yes",
-      "agent_note": "",
-      "files": ["<path:line>"],
-      "verify": "<verify by>"
-    }
-  ]
-}
-```
-
 **Write the report to** `reports/cd-unity-project-review/report.md` (or the path the user gave) and the scanner JSON to `evidence/` beside it.

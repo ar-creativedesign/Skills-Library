@@ -80,29 +80,4 @@ Standards: WCAG 2.2 AA (checked current on {date} / not re-checked). EN 301 549 
 - **Verify by:** a concrete check a person or a re-run can do, with the page, viewport, command or setting.
 - **Tooling and process** (missing a11y lint rules, axe in tests, Lighthouse CI): add these as P4 actions with the exact package and config.
 
-**Also write `actions.json`** next to the report, with the same actions:
-
-```json
-{
-  "skill": "<name> v<version>",
-  "target": "<site or project>",
-  "date": "YYYY-MM-DD",
-  "actions": [
-    {
-      "id": "A1",
-      "priority": "P1",
-      "title": "<short title>",
-      "action": "<the full action text>",
-      "resolves": ["<ID>"],
-      "owner": "<owner>",
-      "effort": "S",
-      "agent_ready": "yes",
-      "agent_note": "",
-      "files": ["<path:line>"],
-      "verify": "<verify by>"
-    }
-  ]
-}
-```
-
 **Write the report to** `reports/cd-web-a11y-audit/report.md` (or the path the user gave). **Save screenshots** in `evidence/` beside it and link them with relative paths (`evidence/home-200pct.png`) so the report renders in Obsidian, GitHub or VS Code.
