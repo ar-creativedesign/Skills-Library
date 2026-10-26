@@ -1,0 +1,31 @@
+<!doctype html>
+<html><head><title>Fixture</title><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+body{margin:0;font-family:sans-serif;scroll-behavior:smooth}
+header{position:fixed;top:0;left:0;right:0;height:80px;background:#fff;z-index:5}
+.sticky{position:sticky;top:80px;height:200px;background:#eee;z-index:4}
+.hero{height:120px;overflow:hidden;background:#123}
+.hero p{color:#fff}
+.pill{background:#a8a8a8;color:#fff;display:inline-block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.wide{white-space:nowrap}
+body :focus-visible{outline:4px solid #ffd800!important}
+.card{cursor:pointer}
+</style></head>
+<body>
+<header><a href="/"><img src="logo.png" alt=""></a><button aria-controls="m">Menu</button></header>
+<div style="height:90px"></div>
+<div class="hero"><p>Hero text</p><p>more</p><p>more</p><p>more</p><button>Hidden CTA</button></div>
+<div class="sticky">Filters <input placeholder="Search content"> <span class="pill">B.1</span></div>
+<h1>Title</h1><h4>Skipped</h4>
+<button><h5>Heading in button</h5></button>
+<div class="card">Clickable card</div>
+<img src="photo.jpg">
+<p class="wide">Averyveryveryveryveryveryveryveryveryveryveryveryveryveryveryveryverylongunbreakablewordthatoverflowsthesmallviewport</p>
+<a href="#">menu</a> <a href="/x" target="_blank">Read more</a>
+<button><span class="sr">Click me</span></button>
+<label>Email <input type="email" name="email"></label>
+<span tabindex="0" data-bs-toggle="tooltip">Term</span>
+<div style="height:1500px"></div>
+<button>Last</button>
+</body></html>
