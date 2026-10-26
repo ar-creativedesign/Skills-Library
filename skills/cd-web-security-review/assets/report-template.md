@@ -3,7 +3,7 @@
 ```markdown
 # {Site name} – Security Review
 
-{date} · OWASP Top 10:2025 · mode: {live|code|both} · test level: {passive|light-active} · {agent/model} · skill: cd-web-security-review v1.2.0
+{date} · OWASP Top 10:2025 · mode: {live|code|both} · test level: {passive|light-active} · {agent/model} · skill: cd-web-security-review v1.3.0
 
 > Authorisation: {as given}. Non-destructive review. Not a penetration test.
 
@@ -62,4 +62,4 @@ Standards: OWASP Top 10:2025 and ASVS 5.0 (checked current on {date} / not re-ch
 - **Remediation:** a concrete config or code change. Example: "Add `Strict-Transport-Security: max-age=31536000; includeSubDomains` at the CDN/nginx". Name the layer to change (CDN, nginx, framework config, CMS).
 - Keep sentences short, use specifics rather than adjectives, use UK English, no padding, and never include full secrets.
 
-**Write the report to** the file path chosen in SKILL.md section 2. **Save evidence** (screenshots, command output with secrets redacted) in the evidence folder, linked with relative paths.
+**Write the report to** `reports/cd-web-security-review/report.md` (or the path the user gave). **Save evidence** (screenshots, command output with secrets redacted) in `evidence/` beside it, linked with relative paths (`evidence/headers.txt`).

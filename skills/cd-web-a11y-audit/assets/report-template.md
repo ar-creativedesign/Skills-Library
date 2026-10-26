@@ -3,7 +3,7 @@
 ```markdown
 # {Site name} – Accessibility Audit
 
-{date} · audited against WCAG 2.2 AA · mode: {live|code|both} · {agent/model} · skill: cd-web-a11y-audit v1.2.0
+{date} · audited against WCAG 2.2 AA · mode: {live|code|both} · {agent/model} · skill: cd-web-a11y-audit v1.3.0
 
 ## Summary
 {One-sentence verdict.} {N} issues: {c} critical, {h} high, {m} medium, {l} low.
@@ -55,4 +55,4 @@ Standards: WCAG 2.2 AA (checked current on {date} / not re-checked). EN 301 549 
 - **Remediation:** a concrete fix aimed at the component or CSS rule, for example "Replace `height` with `min-height` on `.hero`; remove `overflow:hidden`". Quote the root-cause rule from `focusRules()` or computed styles where you found it.
 - Keep sentences short, use specifics rather than adjectives, use UK English, and never pad.
 
-**Write the report to** the file path chosen in SKILL.md section 2. **Save screenshots** in the evidence folder and link them with relative paths so the report renders in Obsidian, GitHub or VS Code.
+**Write the report to** `reports/cd-web-a11y-audit/report.md` (or the path the user gave). **Save screenshots** in `evidence/` beside it and link them with relative paths (`evidence/home-200pct.png`) so the report renders in Obsidian, GitHub or VS Code.

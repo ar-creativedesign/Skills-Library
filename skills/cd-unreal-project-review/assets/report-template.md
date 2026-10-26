@@ -3,7 +3,7 @@
 ```markdown
 # {Project name} – Unreal Project Review
 
-{date} · Unreal {version} · {C++ / Blueprint-only} · {agent/model} · skill: cd-unreal-project-review v0.1.0
+{date} · Unreal {version} · {C++ / Blueprint-only} · {agent/model} · skill: cd-unreal-project-review v0.2.0
 
 > Static, read-only review of the project folder. The editor wasn't opened, nothing was cooked or played, and Blueprint contents weren't inspected.
 
@@ -43,4 +43,4 @@ Fix these first: {3 numbered items with IDs}
 - **Recommendation:** a concrete change and where to make it. Example: "Mark as `UPROPERTY() TObjectPtr<UStaticMeshComponent> Mesh;` in `MyActor.h`".
 - Keep sentences short, use specifics rather than adjectives, use UK English, and no padding.
 
-**Write the report to** the path chosen in SKILL.md section 1. **Save the scanner JSON** next to it, in the evidence folder.
+**Write the report to** `reports/cd-unreal-project-review/report.md` (or the path the user gave) and the scanner JSON to `evidence/` beside it.

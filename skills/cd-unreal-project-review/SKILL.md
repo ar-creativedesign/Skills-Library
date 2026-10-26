@@ -2,7 +2,7 @@
 name: cd-unreal-project-review
 description: Review an Unreal Engine project's source folder for project setup, config, version control hygiene (LFS, locking), Content folder structure and asset naming, C++ code quality and packaging settings, then write a prioritised report with file references and fixes. Static and read-only; it doesn't open the editor, cook, build or play the game, and can't read Blueprint contents. Use when asked to review, audit or health-check an Unreal / UE5 project, codebase or repo.
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
 ---
 
 # Unreal project review (static, read-only)
@@ -21,9 +21,9 @@ Files in this skill (paths relative to this folder):
 
 ## Show that this skill is in use (required)
 
-1. **First line of your first reply:** `Skill: cd-unreal-project-review v0.1.0`, on its own line, then one sentence on what you're about to do.
-2. **Report byline:** include `skill: cd-unreal-project-review v0.1.0` (the template has a slot for it).
-3. **Final message:** end with `Skill: cd-unreal-project-review v0.1.0`.
+1. **First line of your first reply:** `Skill: cd-unreal-project-review v0.2.0`, on its own line, then one sentence on what you're about to do.
+2. **Report byline:** include `skill: cd-unreal-project-review v0.2.0` (the template has a slot for it).
+3. **Final message:** end with `Skill: cd-unreal-project-review v0.2.0`.
 
 ## 1. Read the request
 
@@ -33,12 +33,18 @@ Files in this skill (paths relative to this folder):
 | Focus | All areas in `references/checklist.md` | specific areas, e.g. "just C++" or "content structure" |
 | Target platforms | Read from config where possible, otherwise "unknown" | the platforms the user names |
 | House rules | None | team conventions (naming prefixes, folder layout, coding standard). Apply them on top of the checklist. |
-| Report file | `reports/unreal-review-<project>-<YYYY-MM-DD>.md` | a different path |
+| Output folder | `reports/cd-unreal-project-review/` (see below) | a different path |
+
+**Output folder (every run starts clean).** Unless the user gave another path, all output goes in `reports/cd-unreal-project-review/`, relative to the folder you're working in:
+- `reports/cd-unreal-project-review/report.md`: the report.
+- `reports/cd-unreal-project-review/evidence/`: the scanner JSON and any command output.
+
+Before you write anything, empty `reports/cd-unreal-project-review/` so no files from an earlier run are left behind. Old reports aren't kept. Only ever clear this one folder: never the rest of `reports/`, other skills' folders or anything else in the project. If the user gave a different path, write there and don't delete anything. If you can't delete files, overwrite `report.md`, say which old files remain, and carry on.
 
 ## 2. Rules
 
 1. **Read-only.**
-   - Don't modify, move, rename, resave or delete anything.
+   - Don't modify, move, rename, resave or delete anything. The one exception is emptying this skill's own output folder (section 1).
    - Don't open the editor, run commandlets, build or cook, unless the user explicitly asks.
    - Don't commit or push.
 2. **Evidence for every finding:** file path, plus line or ini key, plus the value. Counts must come from the scanner or a command you ran.
@@ -54,7 +60,7 @@ Files in this skill (paths relative to this folder):
    - The Content top-level layout.
    - C++ or Blueprint-only.
    - Git with LFS, or another VCS (Perforce/Plastic: adapt the version-control checks).
-2. **Run the scanner.** Save its JSON in the evidence folder (default `reports/evidence/unreal-<project>-<date>/`).
+2. **Run the scanner.** Save its JSON as `reports/cd-unreal-project-review/evidence/scan.json`.
 3. **Manual review.** Work through `references/checklist.md` area by area. For C++, read the core gameplay classes (GameMode, Character/Pawn, PlayerController, components, subsystems) and judge the architecture, not just the patterns.
 4. **Triage.** Merge duplicates. Give each finding an ID (`UE-01`…), an area, a severity and a recommendation:
 

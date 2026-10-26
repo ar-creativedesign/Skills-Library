@@ -19,6 +19,6 @@ Tool names change between releases. If a name here doesn't exist, use the equiva
 
 - **Running the kit:** read the kit file from this skill's `scripts/` folder and pass its **entire contents** as one JavaScript evaluation. It defines a global (`window.__a11y` or `window.__sec`) and returns a confirmation string. `await` the async calls.
 - **Antigravity:** the main agent hands browser work to the browser subagent, which may not see this skill. Put the exact steps, the viewport size and the **full kit script** into each delegated task, and ask for the JSON results and screenshot paths back.
-- **Terminal only:** use headed Chromium via Playwright (`npx playwright` or Python) and save screenshots to the evidence folder. If the site blocks automated browsers, don't evade it; ask the user to use their own browser.
+- **Terminal only:** use headed Chromium via Playwright (`npx playwright` or Python) and save screenshots to the output folder's `evidence/`. If the site blocks automated browsers, don't evade it; ask the user to use their own browser.
 - **Per-site permission prompts:** some browsers ask the user before each page load. Prefer in-app navigation in SPAs to keep prompts down. Ask the user to choose "always allow" for the target site if they're watching.
 - **Window vs viewport:** if your tool resizes the window rather than the viewport, check the real size with `document.documentElement.clientWidth/clientHeight` and record it.

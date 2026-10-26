@@ -3,7 +3,7 @@
 ```markdown
 # {Project name} – Unity Project Review
 
-{date} · Unity {version} · {render pipeline} · {agent/model} · skill: cd-unity-project-review v0.1.0
+{date} · Unity {version} · {render pipeline} · {agent/model} · skill: cd-unity-project-review v0.2.0
 
 > Static, read-only review of the project folder. The game wasn't opened, built or played.
 
@@ -43,4 +43,4 @@ Fix these first: {3 numbered items with IDs}
 - **Recommendation:** a concrete change and where to make it. Example: "Texture import preset with Read/Write off, applied via a Preset Manager rule for `Assets/_Project/Art/**`".
 - Keep sentences short, use specifics rather than adjectives, use UK English, and no padding.
 
-**Write the report to** the path chosen in SKILL.md section 1. **Save the scanner JSON** next to it, in the evidence folder.
+**Write the report to** `reports/cd-unity-project-review/report.md` (or the path the user gave) and the scanner JSON to `evidence/` beside it.

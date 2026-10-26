@@ -1,6 +1,6 @@
 ---
 title: Live-browser accessibility audit prompt (WCAG 2.2 AA)
-version: 1.0
+version: 1.1
 updated: 2026-10-26
 works_with: Claude (Claude in Chrome, Claude desktop built-in browser, Claude Code + Playwright) and Google Antigravity (browser subagent)
 tags: [accessibility, wcag, audit, prompt]
@@ -21,8 +21,8 @@ EXCLUDE: []                                 # paths not to touch, e.g. /admin, /
 LOGIN: none                                 # or "I will sign in for you in the browser" (never paste passwords here)
 FORMS_MAY_BE_SUBMITTED: no                  # yes = only the forms listed here, with obviously fake data
 EXTRA_GUIDANCE: none                        # e.g. brand colours, design-system name, known exceptions
-REPORT_FILE: a11y-audit-{domain}-{YYYY-MM-DD}.md
-EVIDENCE_DIR: a11y-evidence/
+REPORT_FILE: reports/cd-web-a11y-audit/report.md
+EVIDENCE_DIR: reports/cd-web-a11y-audit/evidence/
 ```
 
 ## Your role
@@ -168,7 +168,7 @@ Before writing, re-test **every** issue on a fresh page load at the viewport it 
 
 ### Phase 6: Report
 
-Write `REPORT_FILE` in Markdown (Obsidian-friendly) and save screenshots in `EVIDENCE_DIR`, using the template below. If your environment offers a shareable document or artifact, you may publish it there too.
+Before writing, empty `reports/cd-web-a11y-audit/` (that folder only) so nothing from an earlier run is left; old reports aren't kept. If `REPORT_FILE` was changed to another location, don't delete anything. Then write `REPORT_FILE` in Markdown (Obsidian-friendly) and save screenshots in `EVIDENCE_DIR`, using the template below. If your environment offers a shareable document or artifact, you may publish it there too.
 
 ## Severity rubric
 

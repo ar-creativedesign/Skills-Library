@@ -16,7 +16,7 @@ Used by `SKILL.md` when you have the project's source code. Code mode finds the 
 ## 2. Run the scanner
 
 ```bash
-python scripts/code_scan.py <repo-root> --json <evidence-folder>/a11y-code-scan.json
+python scripts/code_scan.py <repo-root> --json reports/cd-web-a11y-audit/evidence/a11y-code-scan.json
 ```
 
 It's standard-library Python only. It flags **leads** grouped by rule, with WCAG reference, file and line. Rules cover:

@@ -2,7 +2,7 @@
 name: cd-web-security-review
 description: Run a non-destructive security review against the OWASP Top 10:2025. Live mode checks a running site with a real browser and safe terminal commands (HTTPS/TLS, headers, CSP, cookies, client-side secrets, third-party scripts, exposed files, consent, DNS/email). Code mode reviews the codebase (secrets and git history, injection sinks, access control, auth, config, dependencies, CI, hosting rules). With both, it ties each live issue to its source. Writes a prioritised report. Use when asked for a security, vulnerability, hardening or OWASP check of a site or codebase the user owns or is authorised to test. Not a penetration test.
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Web security review (OWASP Top 10:2025, live site and codebase, non-destructive)
@@ -32,9 +32,9 @@ Files in this skill (paths relative to this folder):
 
 So the team can see which skill produced a result:
 
-1. **First line of your first reply:** `Skill: cd-web-security-review v1.2.0`, on its own line, then one sentence on what you're about to do.
-2. **Report byline:** include `skill: cd-web-security-review v1.2.0` (the template already has a slot for it).
-3. **Final message:** end with `Skill: cd-web-security-review v1.2.0`.
+1. **First line of your first reply:** `Skill: cd-web-security-review v1.3.0`, on its own line, then one sentence on what you're about to do.
+2. **Report byline:** include `skill: cd-web-security-review v1.3.0` (the template already has a slot for it).
+3. **Final message:** end with `Skill: cd-web-security-review v1.3.0`.
 
 If you are only partly following this skill (for example the user asked for just one check), still add the stamp and say which parts you ran.
 
@@ -63,8 +63,13 @@ Take what you need from the user's message and use these defaults for the rest. 
 | Login | none | the user will sign in with a test account. Ask them to do it in the browser; never take passwords in chat. |
 | Forms that may be submitted | none | named forms (e.g. "you can test the login form once with a fake user") |
 | Max request rate | 1 per second | a different limit |
-| Report file | `reports/security-review-<domain>-<YYYY-MM-DD>.md` | a different path |
-| Evidence folder | `reports/evidence/security-<domain>-<YYYY-MM-DD>/` | a different path |
+| Output folder | `reports/cd-web-security-review/` (see below) | a different path |
+
+**Output folder (every run starts clean).** Unless the user gave another path, all output goes in `reports/cd-web-security-review/`, relative to the folder you're working in:
+- `reports/cd-web-security-review/report.md`: the report.
+- `reports/cd-web-security-review/evidence/`: screenshots, command output (secrets redacted) and scanner JSON.
+
+Before you write anything, empty `reports/cd-web-security-review/` so no files from an earlier run are left behind. Old reports aren't kept. Only ever clear this one folder: never the rest of `reports/`, other skills' folders or anything else in the project. If the user gave a different path, write there and don't delete anything. If you can't delete files, overwrite `report.md`, say which old files remain, and carry on.
 
 ## 3. Rules (non-negotiable)
 
@@ -172,7 +177,7 @@ If the scanner reports a live-looking secret, **alert the user immediately** bef
 
 **Phase 8: Report.**
 1. Read `assets/report-template.md`.
-2. Write the report and save evidence.
+2. Write `report.md` and save evidence in `evidence/`, in the output folder you cleared in section 2.
 3. Tell the user, in two or three sentences: any critical exposure first, then the counts by severity and the top fixes. Then give the report location.
 
 If your environment has a better place for a shareable report (a document or artifact), you may publish there too. Never include unredacted secrets anywhere.

@@ -1,6 +1,6 @@
 ---
 title: Live-browser web security review prompt (OWASP Top 10:2025)
-version: 1.0
+version: 1.1
 updated: 2026-10-26
 works_with: Claude (Claude in Chrome, Claude desktop built-in browser, Claude Code + Playwright) and Google Antigravity (browser subagent + terminal)
 tags: [security, owasp, audit, prompt]
@@ -24,8 +24,8 @@ EXCLUDE: []                                  # paths not to touch, e.g. /admin, 
 TEST_LEVEL: passive                          # passive | light-active (see "Test levels")
 LOGIN: none                                  # or "test account; I will sign in for you in the browser"
 MAX_REQUEST_RATE: 1 per second
-REPORT_FILE: security-review-{domain}-{YYYY-MM-DD}.md
-EVIDENCE_DIR: security-evidence/
+REPORT_FILE: reports/cd-web-security-review/report.md
+EVIDENCE_DIR: reports/cd-web-security-review/evidence/
 ```
 
 ## Your role
@@ -199,7 +199,7 @@ Re-test every finding once with a fresh request or page load. Drop anything you 
 
 ### Phase 8: Report
 
-Write `REPORT_FILE` in Markdown and save screenshots and command output in `EVIDENCE_DIR`, using the template below.
+Before writing, empty `reports/cd-web-security-review/` (that folder only) so nothing from an earlier run is left; old reports aren't kept. If `REPORT_FILE` was changed to another location, don't delete anything. Then write `REPORT_FILE` in Markdown and save screenshots and command output in `EVIDENCE_DIR`, using the template below.
 
 ## OWASP Top 10:2025: what this review can and can't establish
 
