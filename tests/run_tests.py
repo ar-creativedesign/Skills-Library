@@ -1,6 +1,6 @@
 """Validate every skill in skills/ and run each skill's browser tests.
 
-    python tests/run_tests.py            # structure checks for every skill
+    python tests/run_tests.py            # structure checks + tests/<skill>/test_code.py for every skill
     python tests/run_tests.py --browser  # + browser tests in tests/<skill>/test_browser.py
                                          #   (needs: pip install playwright && playwright install chromium)
 
@@ -66,6 +66,14 @@ skills = sorted(p for p in SKILLS.iterdir() if p.is_dir() and (p / "SKILL.md").e
 check(len(skills) > 0, "at least one skill found")
 for s in skills:
     structure(s)
+
+for s in skills:
+    t = TESTS / s.name / "test_code.py"
+    if t.exists():
+        spec = importlib.util.spec_from_file_location(f"c_{s.name}", t)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        mod.run(s, check)
 
 if "--browser" in sys.argv:
     from playwright.sync_api import sync_playwright

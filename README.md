@@ -6,10 +6,10 @@ Our team's agent skills, for Claude (Claude Code and the Claude app) and Google 
 
 | Skill | Version | What it does | Ask it like this |
 | --- | --- | --- | --- |
-| [`cd-web-a11y-audit`](skills/cd-web-a11y-audit/SKILL.md) | 1.0.0 | WCAG 2.2 AA accessibility audit of a live site, driving a real browser: keyboard, zoom/reflow, text spacing, contrast, screen sizes, ARIA. Writes an evidence-based report. | "Run an accessibility audit on https://example.com" |
-| [`cd-web-security-review`](skills/cd-web-security-review/SKILL.md) | 1.0.0 | Non-destructive security review against OWASP Top 10:2025: HTTPS/TLS, headers, CSP, cookies, client-side secrets, third-party scripts, exposed files, consent, DNS/email protection. Not a pen test. | "Security review of https://example.com, it's our site, light-active" |
+| [`cd-web-a11y-audit`](skills/cd-web-a11y-audit/SKILL.md) | 1.1.0 | WCAG 2.2 AA accessibility audit. **Live:** drives a real browser (keyboard, zoom/reflow, text spacing, contrast, screen sizes). **Code:** scans components, CSS, router and templates. **Both:** ties each live issue to the file causing it. | "Run an accessibility audit on https://example.com" · "Accessibility review of this repo" · "Audit https://example.com and this codebase" |
+| [`cd-web-security-review`](skills/cd-web-security-review/SKILL.md) | 1.1.0 | Non-destructive OWASP Top 10:2025 review. **Live:** HTTPS/TLS, headers, CSP, cookies, client-side secrets, third-party scripts, exposed files, consent, DNS/email. **Code:** secrets and git history, injection sinks, access control, auth, config, dependencies, CI, hosting rules. Not a pen test. | "Security review of https://example.com, it's our site" · "Security review of this repo" |
 
-The web skills need an agent with a browser: Claude in Chrome, the Claude desktop app's built-in browser, Playwright in Claude Code, or Antigravity's browser. The security skill also uses a terminal (`curl`, `openssl`, `dig`). Without a browser, both skills are told to stop rather than guess.
+Each skill picks **live**, **code** or **both** mode from what it has: a URL, the codebase open in the workspace, or both. Both is the most conclusive. Live mode needs an agent with a browser: Claude in Chrome, the Claude desktop app's built-in browser, Playwright in Claude Code, or Antigravity's browser. The security skill also uses a terminal (`curl`, `openssl`, `dig`). Without a browser, live mode stops rather than guessing; code mode still works.
 
 ## Install
 
@@ -35,7 +35,7 @@ skills/<cd-skill>/          one folder per skill (Agent Skills format)
 tests/run_tests.py          validates every skill; runs tests/<cd-skill>/test_browser.py with --browser
 tests/<cd-skill>/           per-skill fixtures and browser tests (optional)
 templates/cd-skill-template/   starting point for a new skill
-prompts/<cd-skill>.md       standalone single-file prompts for agents without skill support (optional)
+prompts/<cd-skill>.md       standalone single-file prompts for agents without skill support (live mode only, v1.0)
 install.sh · install.ps1 · build-dist.sh
 .github/workflows/ci.yml    tests on every push/PR; tagged releases get one zip per skill
 ```

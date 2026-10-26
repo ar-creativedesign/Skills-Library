@@ -3,7 +3,7 @@
 ```markdown
 # {Site name} – Accessibility Audit
 
-{date} · audited against WCAG 2.2 AA · {agent/model} · skill: cd-web-a11y-audit v1.0.0
+{date} · audited against WCAG 2.2 AA · mode: {live|code|both} · {agent/model} · skill: cd-web-a11y-audit v1.1.0
 
 ## Summary
 {One-sentence verdict.} {N} issues: {c} critical, {h} high, {m} medium, {l} low.
@@ -19,14 +19,20 @@ Pages tested: {list}. Browser: {name/version}. Date and time.
 Automated checks and interactive checks performed. Re-test: {what was confirmed or dropped}.
 
 ## Site-wide issues
-| ID | Issue | Severity | Guidance broken | Pages | Size / zoom | Evidence | Remediation |
+| ID | Issue | Severity | Guidance broken | Pages | Size / zoom | Found by | Source (file:line) | Evidence | Remediation |
 
 ## {Page name} ({path})
-| ID | Issue | Severity | Guidance broken | Size / zoom | Evidence | Remediation |
+| ID | Issue | Severity | Guidance broken | Size / zoom | Found by | Source (file:line) | Evidence | Remediation |
 (one section per page or template; "No page-specific issues" if none)
 
 ## Evidence
 {Screenshots embedded or linked, each captioned with ID, page, viewport and what it shows}
+
+## Code-only findings
+{Leads confirmed in code but not reproduced live (or no live audit), same columns; confidence noted}
+
+## Tooling recommendations
+{Missing a11y lint rules, axe in tests, Lighthouse CI: exact packages and config}
 
 ## What passed
 {Bulleted list of notable passes}
@@ -40,7 +46,8 @@ Automated checks and interactive checks performed. Re-test: {what was confirmed 
 - **Guidance broken:** the WCAG number and name, plus the checklist item in brackets.
 - **Size / zoom:** the matrix label(s) where it fails, or "All".
 - **Evidence:** a screenshot file and/or the measurement.
+- **Found by / Source:** `live`, `code` or `both`, and the file:line (or component) that causes it where known.
 - **Remediation:** a concrete fix aimed at the component or CSS rule, for example "Replace `height` with `min-height` on `.hero`; remove `overflow:hidden`". Quote the root-cause rule from `focusRules()` or computed styles where you found it.
 - Keep sentences short, use specifics rather than adjectives, use UK English, and never pad.
 
-**Write the report to** the file path chosen in SKILL.md section 1. **Save screenshots** in the evidence folder and link them with relative paths so the report renders in Obsidian, GitHub or VS Code.
+**Write the report to** the file path chosen in SKILL.md section 2. **Save screenshots** in the evidence folder and link them with relative paths so the report renders in Obsidian, GitHub or VS Code.
