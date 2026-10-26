@@ -1,0 +1,1 @@
+{ "name": "fixture", "dependencies": { "vue": "^3.4.0", "vue-router": "^4.3.0", "bootstrap": "^5.3.0" } }

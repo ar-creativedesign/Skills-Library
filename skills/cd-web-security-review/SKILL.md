@@ -1,19 +1,27 @@
 ---
 name: cd-web-security-review
-description: Run a non-destructive security review of a live website against the OWASP Top 10:2025 using a real browser and safe terminal checks (HTTPS/TLS, security headers, CSP, cookies, client-side secrets, third-party scripts, exposed files, error handling, consent, DNS/email protection), then write a prioritised report. Use when asked for a security, vulnerability, hardening or OWASP check of a website the user owns or is authorised to test. Not a penetration test.
+description: Run a non-destructive security review against the OWASP Top 10:2025. Live mode checks a running site with a real browser and safe terminal commands (HTTPS/TLS, headers, CSP, cookies, client-side secrets, third-party scripts, exposed files, consent, DNS/email). Code mode reviews the codebase (secrets and git history, injection sinks, access control, auth, config, dependencies, CI, hosting rules). With both, it ties each live issue to its source. Writes a prioritised report. Use when asked for a security, vulnerability, hardening or OWASP check of a site or codebase the user owns or is authorised to test. Not a penetration test.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
-# Web security review (OWASP Top 10:2025, live and non-destructive)
+# Web security review (OWASP Top 10:2025, live site and codebase, non-destructive)
 
-Review the site the user names with a **real browser** and **safe terminal commands** (`curl`, `openssl`, `dig`). Then write a prioritised report a development team can act on. This is a defensive review of configuration, transport, headers, client-side exposure, third-party risk and visible behaviour. It is **not** a penetration test and never tries to exploit anything.
+Review the site and/or codebase the user names, then write a prioritised report a development team can act on.
+
+- **Live mode:** a real browser plus safe terminal commands (`curl`, `openssl`, `dig`). Covers configuration, transport, headers, client-side exposure, third-party risk and visible behaviour.
+- **Code mode:** read-only review of the source and its git history. Covers secrets, injection sinks, access control, authentication, configuration, dependencies, CI and hosting rules.
+- **Both:** ties each live issue to its source and covers server-side risks a live review can't see.
+
+It is **not** a penetration test and never tries to exploit anything.
 
 Files in this skill (paths relative to this folder):
 
 | File | Use it for |
 | --- | --- |
-| `scripts/sec-kit.js` | The in-page check script. Read the file and run its **entire contents** as one JavaScript evaluation in each page. |
+| `scripts/sec-kit.js` | The in-page check script (live mode). Read the file and run its **entire contents** as one JavaScript evaluation in each page. |
+| `scripts/code_scan.py` | Static scanner (code mode): `python scripts/code_scan.py <repo> --json <file>`. Produces leads with OWASP category, file and line; secrets redacted. |
+| `references/code-review.md` | Code mode: rules, scanner, dependency audit commands, optional Semgrep/Gitleaks, manual checklist, how to tie live findings to source. |
 | `references/commands.md` | Terminal commands, the fixed exposure-path list, and the light-active checks. |
 | `references/owasp-2025.md` | OWASP 2025 mapping, general protection checks, severity rubric and the Kit reference. |
 | `references/browser-tools.md` | How to map each action onto Claude or Antigravity tools. Read it first. |
@@ -23,20 +31,31 @@ Files in this skill (paths relative to this folder):
 
 So the team can see which skill produced a result:
 
-1. **First line of your first reply:** `Skill: cd-web-security-review v1.0.0`, on its own line, then one sentence on what you're about to do.
-2. **Report byline:** include `skill: cd-web-security-review v1.0.0` (the template already has a slot for it).
-3. **Final message:** end with `Skill: cd-web-security-review v1.0.0`.
+1. **First line of your first reply:** `Skill: cd-web-security-review v1.1.0`, on its own line, then one sentence on what you're about to do.
+2. **Report byline:** include `skill: cd-web-security-review v1.1.0` (the template already has a slot for it).
+3. **Final message:** end with `Skill: cd-web-security-review v1.1.0`.
 
 If you are only partly following this skill (for example the user asked for just one check), still add the stamp and say which parts you ran.
 
-## 1. Read the request
+## 1. Choose the mode
+
+| You have… | Mode |
+| --- | --- |
+| A URL and no access to the code | **Live** |
+| Access to the code (a repo is open in your workspace, or the user gives a path or repo) and no URL | **Code** |
+| Both | **Both** (the default whenever both are available). Do live first, then code, then tie them together. |
+
+Say which mode you're using in your first reply. List what the chosen mode can't establish under "Not covered".
+
+## 2. Read the request
 
 Take what you need from the user's message and use these defaults for the rest. Write the values you used under "Scope and method" in the report.
 
 | Setting | Default | Change it when the request says… |
 | --- | --- | --- |
-| Target URL | none (required) | the URL given |
-| Authorisation | **required** | "my site", "we own it", "client X approved testing", etc. If it isn't stated, ask once: *"Do you own this site or have written permission to test it?"* Don't send any requests until you have a yes. If nobody can answer (unattended run), stop. |
+| Target URL | none (needed for live mode) | the URL given |
+| Codebase | the repo open in your workspace, if any | a path or repo the user names; "don't look at the code" |
+| Authorisation | **required for live mode.** Code mode on a repo the user opened or pointed you to needs no extra confirmation. | "my site", "we own it", "client X approved testing", etc. If it isn't stated, ask once: *"Do you own this site or have written permission to test it?"* Don't send any requests until you have a yes. If nobody can answer (unattended run), stop. |
 | Scope (hosts you may contact) | The target host and its `www.` twin | other hosts named, e.g. "also api.example.com" |
 | Exclude | nothing | paths to avoid |
 | Test level | `passive` | "light-active", "active checks", "check for exposed files" (see `references/commands.md`) |
@@ -46,7 +65,7 @@ Take what you need from the user's message and use these defaults for the rest. 
 | Report file | `reports/security-review-<domain>-<YYYY-MM-DD>.md` | a different path |
 | Evidence folder | `reports/evidence/security-<domain>-<YYYY-MM-DD>/` | a different path |
 
-## 2. Rules (non-negotiable)
+## 3. Rules (non-negotiable)
 
 1. **Authorisation first** (above). Only contact hosts in scope. Never contact other subdomains, IP ranges or third parties you discover.
 2. **No exploitation.** Never:
@@ -57,12 +76,16 @@ Take what you need from the user's message and use these defaults for the rest. 
    - touch other users' data
 
    If you suspect a vulnerability, report it as **Suspected: needs authorised pen test**, with the evidence.
-3. **Real responses only.** Findings come from what the running site returns: headers, cookies, DOM, network traffic, served JavaScript. A repo is not evidence of what's deployed. If you have no browser or terminal, or the site blocks you, **stop and tell the user**. Never report from memory.
+3. **Each mode uses its own evidence.**
+   - Live findings come from what the running site returns: headers, cookies, DOM, network traffic, served JavaScript.
+   - Code findings come from the actual source, with file and line. They describe what the code does, not proof of what's deployed. Say so where it matters.
+   - If you can't reach the site or read the code you were asked to review, **stop and tell the user**. Never report from memory.
 4. **Evidence and confidence for every finding.** Evidence means the command plus the relevant response lines, a screenshot, or Kit output. Confidence is **Confirmed**, **Likely** or **Suspected**.
 5. **Protect what you find.**
    - Never write full secrets, tokens, keys, session IDs or personal data anywhere. Show at most the first 6 characters plus the length.
    - If live credentials or personal data are exposed, stop accessing that resource, don't use them, and **alert the user immediately** before continuing.
 6. **Do no harm.**
+   - In code mode, stay read-only: no edits, installs into the project, commits or pushes. Never test whether a found credential works.
    - Use GET/HEAD/OPTIONS only, except for forms the user named.
    - No accounts, purchases or messages.
    - Respect the rate limit.
@@ -70,7 +93,9 @@ Take what you need from the user's message and use these defaults for the rest. 
 7. **Bot protection.** On a 403, CAPTCHA or challenge, **do not evade** it: no user-agent spoofing, proxies or stealth plugins. Use a browser the user controls, or stop and report it. A WAF block counts as a positive finding.
 8. **Be honest about coverage.** List what this review cannot establish.
 
-## 3. Procedure
+## 4. Procedure
+
+Phases 1–5 are live mode. In code-only mode, skip to Phase 5b. In both mode, run them all.
 
 **Phase 1: Discover (passive).**
 1. Load the URL. Record:
@@ -113,15 +138,26 @@ Take what you need from the user's message and use these defaults for the rest. 
 - SRI
 - iframes
 
+**Phase 5b: Code review** (code or both mode). Follow `references/code-review.md`:
+1. Get oriented.
+2. Run `scripts/code_scan.py`.
+3. Run the dependency audit.
+4. Run optional Semgrep/Gitleaks if the user agrees.
+5. Work through the manual checklist.
+6. Tie live findings to their source.
+
+If the scanner reports a live-looking secret, **alert the user immediately** before continuing.
+
 **Phase 6: Triage.** Merge duplicates: a header missing on every page is **one** finding. Give each finding:
 - an ID (`SEC-01`…)
 - a severity, using the rubric in `references/owasp-2025.md`
 - an OWASP 2025 category
 - a confidence
+- **Found by** (live / code / both) and a **Source** (file:line) where known
 
 **Phase 7: Verify.**
 1. Re-test every finding once with a fresh request or page load, and drop anything you can't reproduce.
-2. For exposed-file findings, compare the body with the site's normal 404/SPA fallback.
+2. For exposed-file findings, compare the body with the site's normal 404/SPA fallback. For code findings, re-read the code path and drop anything a framework default, middleware or sanitiser already handles.
 3. Check that no unredacted secret is in your notes or the report.
 4. Say this was a re-test, not an independent second review.
 
