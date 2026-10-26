@@ -2,7 +2,7 @@
 name: cd-web-a11y-audit
 description: Audit a website for accessibility against WCAG 2.2 AA. Live mode drives a real browser (keyboard, zoom, reflow, text spacing, contrast, screen sizes); code mode reviews the codebase (components, CSS, router, templates); with both it ties each live issue to the file that causes it. Writes an evidence-based report with severity, WCAG reference, page, viewport, source and fix. Use when asked for an accessibility audit, WCAG or a11y check or review of a website, URL, web app or front-end codebase.
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Web accessibility audit (WCAG 2.2 AA, live site and codebase)
@@ -29,9 +29,9 @@ Files in this skill (paths relative to this folder):
 
 So the team can see which skill produced a result:
 
-1. **First line of your first reply:** `Skill: cd-web-a11y-audit v1.2.0`, on its own line, then one sentence on what you're about to do.
-2. **Report byline:** include `skill: cd-web-a11y-audit v1.2.0` (the template already has a slot for it).
-3. **Final message:** end with `Skill: cd-web-a11y-audit v1.2.0`.
+1. **First line of your first reply:** `Skill: cd-web-a11y-audit v1.3.0`, on its own line, then one sentence on what you're about to do.
+2. **Report byline:** include `skill: cd-web-a11y-audit v1.3.0` (the template already has a slot for it).
+3. **Final message:** end with `Skill: cd-web-a11y-audit v1.3.0`.
 
 If you are only partly following this skill (for example the user asked for just one check), still add the stamp and say which parts you ran.
 
@@ -58,8 +58,13 @@ Take what you need from the user's message and use these defaults for the rest. 
 | Login | none: public pages only | the user will sign in for you. Ask them to do it in the browser; never take passwords in chat. |
 | Forms may be submitted | no | named forms, which use obviously fake data |
 | Extra guidance | none | an attached checklist, brand guide or design-system notes. Apply it on top of WCAG 2.2 AA. |
-| Report file | `reports/a11y-audit-<domain>-<YYYY-MM-DD>.md` | a different path or format |
-| Evidence folder | `reports/evidence/a11y-<domain>-<YYYY-MM-DD>/` | a different path |
+| Output folder | `reports/cd-web-a11y-audit/` (see below) | a different path or format |
+
+**Output folder (every run starts clean).** Unless the user gave another path, all output goes in `reports/cd-web-a11y-audit/`, relative to the folder you're working in:
+- `reports/cd-web-a11y-audit/report.md`: the report, ending with the action plan.
+- `reports/cd-web-a11y-audit/evidence/`: screenshots, `__a11y.scan()` and scanner JSON.
+
+Before you write anything, empty `reports/cd-web-a11y-audit/` so no files from an earlier run are left behind. Old reports aren't kept. Only ever clear this one folder: never the rest of `reports/`, other skills' folders or anything else in the project. If the user gave a different path, write there and don't delete anything. If you can't delete files, overwrite `report.md`, say which old files remain, and carry on.
 
 If your environment has a better place for a shareable report (a document or artifact the user can open), you may publish there as well. The Markdown file stays the default.
 
@@ -174,9 +179,10 @@ Use `__a11y.focusNow()` after real Tab presses to get the ring contrast and to s
 
 **Phase 6: Report.**
 1. Read `assets/report-template.md`.
-2. Write the report file and save screenshots in the evidence folder.
-3. Tell the user, in two or three sentences: the verdict, the counts by severity, and the top fixes. Then give the report location.
+2. Write `report.md` and save screenshots in `evidence/`, in the output folder you cleared in section 2.
+3. Build the action plan last, from the triaged findings: group shared fixes, prioritise, size the effort, and check every finding is covered. Write it as the final section of `report.md`.
+4. Tell the user, in two or three sentences: the verdict, the counts by severity, and the top three actions. Then give the report location.
 
 ## 6. Independent runs (only if asked)
 
-If the user wants to know whether results repeat, explain that each run must happen in a **separate, fresh session** that hasn't seen earlier reports. Then merge the reports by component and behaviour. Add a "Seen in" column (e.g. 2/3), and re-test single-run findings before keeping them. A re-test inside one session is validation, not an independent run.
+If the user wants to know whether results repeat, explain that each run must happen in a **separate, fresh session** that hasn't seen earlier reports. Then merge the reports by component and behaviour. Add a "Seen in" column (e.g. 2/3), and re-test single-run findings before keeping them. A re-test inside one session is validation, not an independent run. Each run empties the output folder, so ask the user to move each report out, or give each run its own path (e.g. `reports/cd-web-a11y-audit-run-2/`), before starting the next.

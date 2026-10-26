@@ -30,7 +30,7 @@ Map the system before scanning:
 ## 2. Run the scanner
 
 ```bash
-python scripts/code_scan.py <repo-root> --json <evidence-folder>/security-code-scan.json
+python scripts/code_scan.py <repo-root> --json reports/cd-web-security-review/evidence/security-code-scan.json
 ```
 
 It's standard-library Python only, and reads git history read-only. It flags **leads** with an OWASP 2025 category, file and line:
@@ -74,7 +74,7 @@ Also check whether Dependabot (or Renovate) is configured, whether a lockfile is
 
 If the user agrees and the tools are installed or runnable without touching the repo:
 - **Semgrep:** `semgrep --config p/owasp-top-ten --config p/secrets --json -o <evidence>/semgrep.json .` This downloads rules from the Semgrep registry.
-- **Gitleaks:** `gitleaks detect --redact --report-path <evidence>/gitleaks.json`.
+- **Gitleaks:** `gitleaks detect --redact --report-path reports/cd-web-security-review/evidence/gitleaks.json`.
 - **GitHub code scanning (CodeQL):** if it's already enabled, read its alerts rather than re-running it.
 
 Tag each finding with the tool that produced it.

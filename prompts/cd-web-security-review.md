@@ -1,6 +1,6 @@
 ---
 title: Live-browser web security review prompt (OWASP Top 10:2025)
-version: 1.0
+version: 1.1
 updated: 2026-10-26
 works_with: Claude (Claude in Chrome, Claude desktop built-in browser, Claude Code + Playwright) and Google Antigravity (browser subagent + terminal)
 tags: [security, owasp, audit, prompt]
@@ -24,8 +24,8 @@ EXCLUDE: []                                  # paths not to touch, e.g. /admin, 
 TEST_LEVEL: passive                          # passive | light-active (see "Test levels")
 LOGIN: none                                  # or "test account; I will sign in for you in the browser"
 MAX_REQUEST_RATE: 1 per second
-REPORT_FILE: security-review-{domain}-{YYYY-MM-DD}.md
-EVIDENCE_DIR: security-evidence/
+REPORT_FILE: reports/cd-web-security-review/report.md
+EVIDENCE_DIR: reports/cd-web-security-review/evidence/
 ```
 
 ## Your role
@@ -199,7 +199,7 @@ Re-test every finding once with a fresh request or page load. Drop anything you 
 
 ### Phase 8: Report
 
-Write `REPORT_FILE` in Markdown and save screenshots and command output in `EVIDENCE_DIR`, using the template below.
+Before writing, empty `reports/cd-web-security-review/` (that folder only) so nothing from an earlier run is left; old reports aren't kept. If `REPORT_FILE` was changed to another location, don't delete anything. Then write `REPORT_FILE` in Markdown and save screenshots and command output in `EVIDENCE_DIR`, using the template below. Build the action plan last, as the final section of the report.
 
 ## OWASP Top 10:2025: what this review can and can't establish
 
@@ -227,14 +227,14 @@ Write `REPORT_FILE` in Markdown and save screenshots and command output in `EVID
 
 ## Summary
 {One-sentence verdict.} {N} findings: {c} critical, {h} high, {m} medium, {l} low, {i} info.
-Fix these first: {3–5 numbered items with IDs}
+Start with: {the top 3 actions from the action plan, one line each}
 {If any critical exposure was found: say so first, and that the user was alerted.}
 
 ## Scope and method
 Hosts in scope, pages reviewed, date and time, tools (browser, curl/openssl/dig), test level, requests sent.
 
 ## Findings
-| ID | Finding | Severity | Confidence | OWASP 2025 | Affected | Evidence | Remediation |
+| ID | Finding | Severity | Confidence | OWASP 2025 | Affected | Evidence | Fix (one line) |
 
 ## Security headers scorecard
 | Header | Value seen | Verdict | Recommended value |
@@ -257,13 +257,42 @@ Hosts in scope, pages reviewed, date and time, tools (browser, curl/openssl/dig)
 
 ## Not covered
 {Limits: no terminal, login not provided, WAF blocked, etc.}
+
+## Action plan
+| # | Priority | Action | Resolves | Owner | Effort | Agent-ready | Verify by |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| A1 | P1 | {what to change and where} | SEC-03, SEC-07 | {owner} | S | Yes | {concrete check} |
+
+**Effort:** S ≤ 2h · M ≤ 1 day · L ≤ 3 days · XL needs scoping. **Agent-ready:** Yes / Partial / No.
+**Totals:** {n} actions resolve {N} findings · P1: {a} · P2: {b} · P3: {c} · P4: {d} · Agent-ready: {y} yes, {p} partial, {x} no
 ```
 
 **How to write each finding:**
 - **Finding:** what and where, with the measured value. Example: "CSP `connect-src` includes `http://localhost:8080` (development leftover)".
 - **Evidence:** the command plus 1–3 response lines, a screenshot, or Kit output, with secrets redacted.
-- **Remediation:** a concrete config or code change. Example: "Add `Strict-Transport-Security: max-age=31536000; includeSubDomains` at the CDN/nginx". Name the layer to change (CDN, nginx, framework config, CMS).
+- **Fix (one line):** the change in a few words, for example "Add HSTS at the CDN". The detail goes in the action plan.
 - Keep sentences short, use specifics rather than adjectives, use UK English, no padding, and never include full secrets.
+
+**How to write the action plan** (the last section; build it from the triaged findings):
+- **Group** findings that share a fix (same CSS rule, config file, component or import preset) into one action, and list every ID in **Resolves**. One finding can appear in more than one action if it needs several changes.
+- **Every finding is covered.** Before finishing, check that each finding ID appears in at least one action. Info-only findings may be left out; say so under the table.
+- **Priority:**
+  - **P1:** any Critical, or a High with effort S
+  - **P2:** the other Highs
+  - **P3:** Medium
+  - **P4:** Low, Info and tooling/process improvements
+
+  An action takes the highest priority any of its findings would get. Within a priority, order by reach (how many pages, users or assets), then cheapest first.
+- **Action:** imperative and specific: what to change, where (file, rule, setting or layer) and to what. Example: "Add `Strict-Transport-Security: max-age=31536000; includeSubDomains` at the CDN". Name the layer to change (CDN, nginx, framework config, CMS).
+- **Owner:** Dev, DevOps/Hosting, Security or Vendor (third-party service).
+- **Effort:** developer time for someone who knows the codebase, including testing. Not AI time. If unsure, round up and say why in the action.
+- **Agent-ready:**
+  - **Yes:** an agent with repo access can make and test the change.
+  - **Partial:** an agent can draft it, but a person must decide, approve or do part of it. Give the reason in brackets.
+  - **No:** it needs a person, the editor/tool UI or a third party. Give the reason in brackets.
+- **Verify by:** a concrete check a person or a re-run can do, with the page, viewport, command or setting.
+- **Needs an authorised penetration test:** add one action for the items in that section, owner Security, Agent-ready: No.
+- Never put a full secret in an action.
 
 ## Security Kit (inject into each page with your JavaScript tool)
 
