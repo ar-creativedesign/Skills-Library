@@ -15,6 +15,35 @@ Our team's agent skills, for Claude (Claude Code and the Claude app) and Google 
 
 Each skill picks **live**, **code** or **both** mode from what it has: a URL, the codebase open in the workspace, or both. Both is the most conclusive. Live mode needs an agent with a browser: Claude in Chrome, the Claude desktop app's built-in browser, Playwright in Claude Code, or Antigravity's browser. The security skill also uses a terminal (`curl`, `openssl`, `dig`). Without a browser, live mode stops rather than guessing; code mode still works.
 
+## Token cost
+
+How much context a typical run uses, so you know what's cheap to run often and what to save for when it matters. Installed skills cost almost nothing until used: the agent only sees each skill's name and description (~100–150 tokens each).
+
+| Rating | Typical run |
+| --- | --- |
+| 🟢 Light | under ~50k tokens. Fine to run on every branch or PR. |
+| 🟡 Medium | ~50–150k tokens. Run per feature, release or review cycle. |
+| 🔴 Heavy | over ~150k tokens. Run deliberately, e.g. before launch or for an audit. |
+
+| Skill | Mode | Rating | Typical run | What drives the cost |
+| --- | --- | --- | --- | --- |
+| `cd-web-new-project` | – | 🟢 Light | 10–25k | Setup, install, lint and build output |
+| `cd-vue-code-review` | branch | 🟢 Light | 15–50k | Size of the diff and the files around it |
+| `cd-vue-code-review` | full | 🟡 Medium | 60–150k | Project size; large files are sampled |
+| `cd-unity-project-review` | – | 🟡 Medium | 30–80k | Scanner summary plus reading the key scripts |
+| `cd-unreal-project-review` | – | 🟡 Medium | 30–80k | Scanner summary plus reading the key C++ |
+| `cd-web-security-review` | code | 🟡 Medium | 40–120k | Repo size, dependency and secret scan output |
+| `cd-web-security-review` | live | 🟡 Medium | 60–150k | Command output, in-page kit, a few screenshots |
+| `cd-web-a11y-audit` | code | 🟡 Medium | 40–100k | Repo size, scanner output |
+| `cd-web-a11y-audit` | live / both | 🔴 Heavy | 150–400k | Pages × screen sizes: kit injection on each page load, screenshots, page reads |
+
+These are estimates. Skill instructions are only 3–12k tokens; scanner scripts run without being read, so only their summary counts. The real cost is the work: screenshots (~1–1.5k each), page reads and the files the agent opens.
+
+**To keep runs cheap:**
+- **Vue code review:** use branch mode day to day, and full mode occasionally.
+- **Live audits:** narrow the scope, e.g. "audit the home, search and contact pages" or "desktop and mobile only".
+- **Long audits:** run them in a fresh session.
+
 ## Install
 
 | Where | How |
@@ -54,7 +83,7 @@ install.sh · install.ps1 · build-dist.sh
    python tests/run_tests.py --browser   # + per-skill browser tests (pip install playwright && playwright install chromium)
    ```
 
-4. Add a row to the **Skills** table above, open a pull request and merge it.
+4. Add a row to the **Skills** and **Token cost** tables above, open a pull request and merge it.
 5. **Release:** to publish zips for the Claude app, tag it: `git tag v2026.10.26 && git push --tags`. CI attaches one zip per skill to the release.
 
 ## Rules for every cd- skill
