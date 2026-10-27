@@ -110,6 +110,11 @@ def run(skill, check):
         check(has(br, "no silent failure", "ProfileView.vue", "fix-now"), "vue-review: untracked file: empty catch flagged")
         check(not has(br, "logical properties (RTL)", "HomeView.vue"), "vue-review: old issue on unchanged line not reported")
         check(not has(br, "setup stores", "cart.store.ts"), "vue-review: untouched file not reported")
+        w(root, "src/views/ProfileView.old.vue", "<script>\nconsole.log(1)\n</script>\n")
+        r, br2 = scan(skill, root, "--branch", "--base", "develop")
+        old = [l for l in br2["leads"] if l["file"].endswith("ProfileView.old.vue")]
+        check(len(old) == 1 and old[0]["rule"] == "stray file", "vue-review: a stray copy is one tidy-up, not re-linted")
+        (root / "src/views/ProfileView.old.vue").unlink()
 
         # ---- develop compares against main; main itself refuses branch mode
         git(root, "stash", "-u", "-q")

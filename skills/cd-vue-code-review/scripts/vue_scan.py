@@ -174,6 +174,10 @@ def scan_file(s, p, rel, text, agents):
     is_test = bool(re.search(r"\.(spec|test)\.[jt]sx?$", name)) or "__tests__" in parts or parts[:1] == ("tests",)
     A = "AGENTS.md" if agents else "good practice"
 
+    if STRAY.search(name):
+        s.add("tidy", "stray file", rel, None, "backup/temp/duplicate-looking file; delete it if unused")
+        return  # don't lint a leftover copy: one finding, not every issue twice
+
     # --- naming and placement
     if in_src:
         if folder == "stores" and ext == ".ts" and not name.endswith(".store.ts") and name != "index.ts":
@@ -194,9 +198,6 @@ def scan_file(s, p, rel, text, agents):
             s.add("should-fix", "placement", rel, None, "service outside `src/services/`", A)
         if len(parts) == 2 and name not in SRC_ROOT_OK and not p.is_dir():
             s.add("should-fix", "placement", rel, None, "loose file in `src/` root; move it into a feature or type folder")
-    if STRAY.search(name):
-        s.add("tidy", "stray file", rel, None, "backup/temp/duplicate-looking file; delete it if unused")
-
     if ext not in CODE_EXT:
         return
 
