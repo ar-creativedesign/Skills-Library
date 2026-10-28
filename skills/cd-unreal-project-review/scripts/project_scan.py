@@ -38,6 +38,17 @@ class Report:
             r["hits"].append({"file": rel, "line": line, "detail": detail[:160]})
 
 
+def parse_json_relaxed(text):
+    try:
+        return json.loads(text)
+    except Exception:
+        pass
+    pattern = r'("(?:\\.|[^"\\])*")|//.*?$|/\*.*?\*/'
+    cleaned = re.sub(pattern, lambda m: m.group(1) if m.group(1) else "", text, flags=re.MULTILINE | re.DOTALL)
+    cleaned = re.sub(r',\s*([}\]])', r'\1', cleaned)
+    return json.loads(cleaned)
+
+
 def read(p):
     try:
         return open(p, encoding="utf-8", errors="ignore").read()
@@ -92,7 +103,7 @@ def scan(root, cap=25, use_git=True):
         return finish(R)
     up_path = os.path.join(root, uprojects[0])
     try:
-        up = json.load(open(up_path, encoding="utf-8"))
+        up = parse_json_relaxed(read(up_path))
     except Exception:
         up = {}
         R.add("UPROJECT_UNREADABLE", "Setup", "High", ".uproject is not valid JSON", up_path)

@@ -14,3 +14,9 @@ def run(skill, check):
                 "TOOLTIP_LIBRARY", "NO_SKIP_LINK", "NO_MAIN_LANDMARK", "WORD_BREAK", "NAV_VIA_BUTTON", "STICKY_OR_FIXED",
                 "GLOBAL_FOCUS_STYLE", "VISUALLY_HIDDEN_NOISE"]:
         check(rid in rules, f"a11y code: {rid} detected")
+
+    sarif = mod.to_sarif("cd-web-a11y-audit", "1.3.0", res["results"])
+    check(sarif.get("version") == "2.1.0", "a11y code: SARIF output generated with version 2.1.0")
+
+    parsed_relaxed = mod.parse_json_relaxed('{\n  // comment\n  "dependencies": {"vue": "^3.4.0",},\n}')
+    check(parsed_relaxed.get("dependencies", {}).get("vue") == "^3.4.0", "a11y code: relaxed JSON parsing supports comments and trailing commas")

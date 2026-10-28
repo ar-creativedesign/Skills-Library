@@ -4,7 +4,8 @@
 #   ./install.sh claude                     # ~/.claude/skills (all your Claude Code projects)
 #   ./install.sh claude-project ~/code/app  # <project>/.claude/skills
 #   ./install.sh antigravity ~/code/app     # <project>/.agents/skills (Antigravity workspace)
-#   ./install.sh --dest /some/skills/dir    # any other skills folder (e.g. Antigravity global)
+#   ./install.sh antigravity-global         # ~/.gemini/antigravity/skills (Antigravity global)
+#   ./install.sh --dest /some/skills/dir    # any other skills folder
 #
 # Options:
 #   --only cd-a,cd-b   install just these skills (default: every skill in skills/)
@@ -14,7 +15,7 @@ set -euo pipefail
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MODE="link"; ONLY=""; DEST=""
 
-usage() { sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
+usage() { sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'; exit 1; }
 
 pos=()
 while [ $# -gt 0 ]; do
@@ -30,10 +31,11 @@ done
 
 if [ -z "$DEST" ]; then
   case "${pos[0]:-}" in
-    claude)         DEST="$HOME/.claude/skills" ;;
-    claude-project) [ -n "${pos[1]:-}" ] || usage; DEST="${pos[1]}/.claude/skills" ;;
-    antigravity)    [ -n "${pos[1]:-}" ] || usage; DEST="${pos[1]}/.agents/skills" ;;
-    *)              usage ;;
+    claude)             DEST="$HOME/.claude/skills" ;;
+    claude-project)     [ -n "${pos[1]:-}" ] || usage; DEST="${pos[1]}/.claude/skills" ;;
+    antigravity)        [ -n "${pos[1]:-}" ] || usage; DEST="${pos[1]}/.agents/skills" ;;
+    antigravity-global) DEST="$HOME/.gemini/antigravity/skills" ;;
+    *)                  usage ;;
   esac
 fi
 

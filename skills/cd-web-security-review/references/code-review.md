@@ -30,7 +30,9 @@ Map the system before scanning:
 ## 2. Run the scanner
 
 ```bash
-python scripts/code_scan.py <repo-root> --json reports/cd-web-security-review/evidence/security-code-scan.json
+python scripts/code_scan.py <repo-root> --json reports/cd-web-security-review/evidence/security-code-scan.json [--sarif reports/cd-web-security-review/evidence/security-code-scan.sarif]
+# On a feature branch or PR, add --branch to scan only added/modified lines:
+python scripts/code_scan.py <repo-root> --branch [--base auto|<branch>] --json reports/cd-web-security-review/evidence/security-code-scan.json
 ```
 
 It's standard-library Python only, and reads git history read-only. It flags **leads** with an OWASP 2025 category, file and line:

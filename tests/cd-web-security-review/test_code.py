@@ -46,3 +46,25 @@ def run(skill, check):
     dump = str(res)
     check(stripe not in dump and aws not in dump and "hunter2hunter2" not in dump, "sec code: secret values redacted in output")
     check(rules.get("SECRET", {}).get("severity_hint") == "Critical", "sec code: live-looking secret rated Critical")
+
+    sarif = mod.to_sarif("cd-web-security-review", "1.3.0", res["results"], d)
+    check(sarif.get("version") == "2.1.0", "sec code: SARIF output has version 2.1.0")
+    check(len(sarif["runs"][0]["results"]) > 0, "sec code: SARIF output includes rule results")
+
+    parsed_relaxed = mod.parse_json_relaxed('{\n  // comment\n  "name": "relaxed-test",\n  "items": [1, 2, ],\n}')
+    check(parsed_relaxed.get("name") == "relaxed-test" and parsed_relaxed.get("items") == [1, 2], "sec code: relaxed JSON parsing supports comments and trailing commas")
+
+    with tempfile.TemporaryDirectory() as bd:
+        broot = pathlib.Path(bd)
+        bg = lambda *a: subprocess.run(["git", "-C", bd, *a], capture_output=True, text=True)
+        bg("init", "-q", "-b", "main")
+        bg("config", "user.email", "t@t")
+        bg("config", "user.name", "t")
+        (broot / "existing.js").write_text("eval('old');\n")
+        bg("add", "-A"); bg("commit", "-qm", "initial on main")
+        bg("checkout", "-q", "-b", "feature/sec-test")
+        (broot / "new.js").write_text("eval('new');\n")
+        bg("add", "-A"); bg("commit", "-qm", "commit on feature")
+        b_res = mod.scan(bd, 25, branch=True, base="main")
+        b_hits = [h["file"] for r in b_res["results"] for h in r["hits"]]
+        check("new.js" in b_hits and "existing.js" not in b_hits, "sec code: branch mode reports only changes from feature branch")

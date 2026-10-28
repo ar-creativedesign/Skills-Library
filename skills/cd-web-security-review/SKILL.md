@@ -20,7 +20,7 @@ Files in this skill (paths relative to this folder):
 | File | Use it for |
 | --- | --- |
 | `scripts/sec-kit.js` | The in-page check script (live mode). Read the file and run its **entire contents** as one JavaScript evaluation in each page. |
-| `scripts/code_scan.py` | Static scanner (code mode): `python scripts/code_scan.py <repo> --json <file>`. Produces leads with OWASP category, file and line; secrets redacted. |
+| `scripts/code_scan.py` | Static scanner (code mode): `python scripts/code_scan.py <repo> --json <file> [--sarif <file>] [--branch]`. Produces leads with OWASP category, file and line; secrets redacted. |
 | `references/code-review.md` | Code mode: rules, scanner, dependency audit commands, optional Semgrep/Gitleaks, manual checklist, how to tie live findings to source. |
 | `references/commands.md` | Terminal commands, the fixed exposure-path list, and the light-active checks. |
 | `references/owasp-2025.md` | OWASP 2025 mapping, general protection checks, severity rubric and the Kit reference. |

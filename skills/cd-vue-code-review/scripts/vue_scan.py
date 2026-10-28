@@ -55,6 +55,17 @@ def sh(args, cwd):
     return r.returncode, r.stdout
 
 
+def parse_json_relaxed(text):
+    try:
+        return json.loads(text)
+    except Exception:
+        pass
+    pattern = r'("(?:\\.|[^"\\])*")|//.*?$|/\*.*?\*/'
+    cleaned = re.sub(pattern, lambda m: m.group(1) if m.group(1) else "", text, flags=re.MULTILINE | re.DOTALL)
+    cleaned = re.sub(r',\s*([}\]])', r'\1', cleaned)
+    return json.loads(cleaned)
+
+
 def walk(root):
     for dp, dns, fns in os.walk(root):
         dns[:] = sorted(d for d in dns if d not in SKIP_DIRS and (not d.startswith(".") or d in (".github", ".husky")))
@@ -385,8 +396,8 @@ def drift(s, repo, tpl):
         elif hashlib.sha1(a.read_bytes()).hexdigest() != hashlib.sha1(b.read_bytes()).hexdigest():
             out.append(("info", c, "differs from the template; compare and adopt deliberate improvements"))
     try:
-        pj = json.loads((repo / "package.json").read_text())
-        tj = json.loads((tpl / "package.json").read_text())
+        pj = parse_json_relaxed((repo / "package.json").read_text(encoding="utf-8", errors="ignore"))
+        tj = parse_json_relaxed((tpl / "package.json").read_text(encoding="utf-8", errors="ignore"))
         missing = sorted(set(tj.get("scripts", {})) - set(pj.get("scripts", {})))
         gates = [m for m in missing if m.startswith(("lint", "health"))]
         if gates:
@@ -402,7 +413,7 @@ def drift(s, repo, tpl):
     except (OSError, ValueError):
         pass
     try:
-        ts = json.loads(re.sub(r"//.*", "", (repo / "tsconfig.json").read_text()))
+        ts = parse_json_relaxed((repo / "tsconfig.json").read_text(encoding="utf-8", errors="ignore"))
         if ts.get("compilerOptions", {}).get("strict") is False:
             out.append(("should-fix", "tsconfig.json", "`strict` is off"))
     except (OSError, ValueError):
