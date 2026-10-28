@@ -33,6 +33,17 @@ class Report:
             r["hits"].append({"file": rel, "line": line, "detail": detail[:160]})
 
 
+def parse_json_relaxed(text):
+    try:
+        return json.loads(text)
+    except Exception:
+        pass
+    pattern = r'("(?:\\.|[^"\\])*")|//.*?$|/\*.*?\*/'
+    cleaned = re.sub(pattern, lambda m: m.group(1) if m.group(1) else "", text, flags=re.MULTILINE | re.DOTALL)
+    cleaned = re.sub(r',\s*([}\]])', r'\1', cleaned)
+    return json.loads(cleaned)
+
+
 def read(p):
     try:
         return open(p, encoding="utf-8", errors="ignore").read()
@@ -84,7 +95,7 @@ def scan(root, cap=25, use_git=True):
         R.add("NON_LTS_EDITOR", "Setup", "Info", f"Editor {ver} isn't in the known LTS list {KNOWN_LTS} (verify; LTS is usually preferred for production)")
     manifest = {}
     try:
-        manifest = json.load(open(os.path.join(root, "Packages", "manifest.json"), encoding="utf-8")).get("dependencies", {})
+        manifest = parse_json_relaxed(read(os.path.join(root, "Packages", "manifest.json"))).get("dependencies", {})
     except Exception:
         R.add("NO_PACKAGE_MANIFEST", "Setup", "Medium", "Packages/manifest.json missing or unreadable")
     R.facts["packages"] = len(manifest)

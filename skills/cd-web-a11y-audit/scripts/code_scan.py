@@ -60,6 +60,17 @@ TAG_RE = re.compile(r"<\s*([a-zA-Z][\w-]*)(\s[^<>]*?)?/?>", re.S)
 CSS_BLOCK_RE = re.compile(r"([^{}]+)\{([^{}]*)\}", re.S)
 
 
+def parse_json_relaxed(text):
+    try:
+        return json.loads(text)
+    except Exception:
+        pass
+    pattern = r'("(?:\\.|[^"\\])*")|//.*?$|/\*.*?\*/'
+    cleaned = re.sub(pattern, lambda m: m.group(1) if m.group(1) else "", text, flags=re.MULTILINE | re.DOTALL)
+    cleaned = re.sub(r',\s*([}\]])', r'\1', cleaned)
+    return json.loads(cleaned)
+
+
 def walk(root):
     for d, dirs, files in os.walk(root):
         rel = os.path.relpath(d, root).replace("\\", "/")
@@ -99,7 +110,7 @@ def scan(root, max_per_rule):
     pkg = os.path.join(root, "package.json")
     if os.path.exists(pkg):
         try:
-            deps = json.load(open(pkg, encoding="utf-8"))
+            deps = parse_json_relaxed(open(pkg, encoding="utf-8", errors="ignore").read())
             alld = {**deps.get("dependencies", {}), **deps.get("devDependencies", {})}
             for k in ["vue", "react", "@angular/core", "svelte", "nuxt", "next", "vue-router", "react-router-dom",
                       "bootstrap", "primevue", "vuetify", "@mui/material", "tailwindcss", "eslint-plugin-vuejs-accessibility",
@@ -229,16 +240,100 @@ def scan(root, max_per_rule):
             "note": "Leads only. Confirm each in context (and in the running app) before reporting. Counts are capped per rule."}
 
 
+def to_sarif(tool_name, tool_version, results, root=""):
+    level_map = {
+        "Critical": "error",
+        "High": "error",
+        "Medium": "warning",
+        "Low": "note",
+        "Info": "note",
+    }
+    sarif_rules = []
+    sarif_results = []
+    seen_rules = set()
+
+    for item in results:
+        rid = item.get("rule")
+        if not rid:
+            continue
+        if rid not in seen_rules:
+            seen_rules.add(rid)
+            sarif_rules.append({
+                "id": rid,
+                "name": rid,
+                "shortDescription": {
+                    "text": item.get("description", rid)
+                },
+                "defaultConfiguration": {
+                    "level": level_map.get(item.get("severity_hint", "Info"), "note")
+                }
+            })
+        for hit in item.get("hits", []):
+            fpath = hit.get("file", "")
+            lvl = level_map.get(item.get("severity_hint", "Info"), "note")
+            if fpath in ("(git history)", "(repo)", "unknown"):
+                sarif_results.append({
+                    "ruleId": rid,
+                    "level": lvl,
+                    "message": {
+                        "text": f"{item.get('description', '')}: {hit.get('snippet', '')}".strip()
+                    }
+                })
+                continue
+            ln = max(1, hit.get("line", 1))
+            sarif_results.append({
+                "ruleId": rid,
+                "level": lvl,
+                "message": {
+                    "text": hit.get("snippet") or item.get("description", "")
+                },
+                "locations": [
+                    {
+                        "physicalLocation": {
+                            "artifactLocation": {
+                                "uri": fpath.replace("\\", "/"),
+                                "uriBaseId": "%SRCROOT%"
+                            },
+                            "region": {
+                                "startLine": ln
+                            }
+                        }
+                    }
+                ]
+            })
+
+    return {
+        "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+        "version": "2.1.0",
+        "runs": [
+            {
+                "tool": {
+                    "driver": {
+                        "name": tool_name,
+                        "version": tool_version,
+                        "rules": sarif_rules
+                    }
+                },
+                "results": sarif_results
+            }
+        ]
+    }
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("root")
     ap.add_argument("--json")
+    ap.add_argument("--sarif")
     ap.add_argument("--max-per-rule", type=int, default=25)
     a = ap.parse_args()
     res = scan(a.root, a.max_per_rule)
     if a.json:
         with open(a.json, "w", encoding="utf-8") as f:
             json.dump(res, f, indent=1)
+    if a.sarif:
+        with open(a.sarif, "w", encoding="utf-8") as f:
+            json.dump(to_sarif("cd-web-a11y-audit", "1.3.0", res["results"], a.root), f, indent=1)
     print(f"Stack: {', '.join(res['stack']) or 'unknown'}")
     for r in res["results"]:
         print(f"\n[{r['severity_hint']}] {r['rule']} ({r['wcag']}): {r['description']} — {r['count']} hit(s)")

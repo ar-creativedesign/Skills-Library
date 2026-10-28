@@ -53,11 +53,12 @@ These are estimates. Skill instructions are only 3–12k tokens; scanner scripts
 | Claude Code, one project | `./install.sh claude-project ~/code/my-app` |
 | Claude app (web/desktop) | Download the zips from the latest [release](../../releases), or run `./build-dist.sh`. Upload each one in Settings → Capabilities → Skills. On a Team or Enterprise plan an org admin can add them for everyone. |
 | Antigravity workspace | `./install.sh antigravity ~/code/my-app`, which puts them in `.agents/skills/` |
-| Antigravity global, or anywhere else | `./install.sh --dest <skills folder>`. Check Antigravity's docs or settings for its current global path. |
-| Windows | `.\install.ps1 -Target claude`, `-Target antigravity -Path C:\code\app`, or `-Dest <folder>` |
+| Antigravity global | `./install.sh antigravity-global`, which links into `~/.gemini/antigravity/skills` |
+| Anywhere else | `./install.sh --dest <skills folder>` |
+| Windows | `.\install.ps1 -Target claude`, `-Target antigravity -Path C:\code\app`, `-Target antigravity-global`, or `-Dest <folder>` (links via junctions by default; add `-Copy` to copy) |
 
 - **Install a subset:** add `--only cd-web-a11y-audit,cd-web-security-review` (PowerShell: `-Only`).
-- **Updating:** `install.sh` symlinks by default, so `git pull` updates every install. Add `--copy` to copy instead. Start a new agent session after installing.
+- **Updating:** `install.sh` (symlinks) and `install.ps1` (junctions) link by default, so `git pull` updates every install. Add `--copy` / `-Copy` to copy instead. Start a new agent session after installing.
 
 ## Repo layout
 

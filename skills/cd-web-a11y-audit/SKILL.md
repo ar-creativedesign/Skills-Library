@@ -18,7 +18,7 @@ Files in this skill (paths relative to this folder):
 | File | Use it for |
 | --- | --- |
 | `scripts/a11y-kit.js` | The in-page test script (live mode). Read the file and run its **entire contents** as one JavaScript evaluation in each page. |
-| `scripts/code_scan.py` | Static scanner (code mode): `python scripts/code_scan.py <repo> --json <file>`. Produces leads with WCAG reference, file and line. |
+| `scripts/code_scan.py` | Static scanner (code mode): `python scripts/code_scan.py <repo> --json <file> [--sarif <file>]`. Produces leads with WCAG reference, file and line. |
 | `references/code-review.md` | Code mode: orientation, scanner, existing tooling, manual checklist, how to tie live findings to source. |
 | `references/checklist.md` | The WCAG 2.2 AA criteria: what to test and what passes. Read it before Phase 3. |
 | `references/browser-tools.md` | How to map each action onto Claude or Antigravity browser tools. Read it first. |
