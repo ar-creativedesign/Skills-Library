@@ -63,4 +63,4 @@ For plugins, `--name` is the plugin package name. Use the project name unless th
 - A fresh scaffold usually gets health grade **C**, because of `npm audit` and `npm outdated` warnings in the template's pinned dependencies. That passes. Report the counts and don't upgrade dependencies unless asked.
 - The web-app README mentions `.github/workflows/deploy-webapp.yml`; the actual file is `ci-cd.yml`. Fix that line when personalising the README.
 - Husky's `prepare` script needs a git repo, so `git init` must come before `npm install`.
-- The project's `AGENTS.md` (imported by `CLAUDE.md` and `GEMINI.md`) tells agents not to run builds or linters unless asked. This skill's verify step is that request, so running them is expected.
+- The project's `AGENTS.md` (read directly by Codex and Antigravity, imported by `CLAUDE.md`, and pointed to by `.gemini/settings.json` for Gemini CLI) tells agents not to run builds or linters unless asked. This skill's verify step is that request, so running them is expected.
