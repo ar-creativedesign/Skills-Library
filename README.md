@@ -6,6 +6,7 @@ Our company agent skills, for Claude Code, the Claude app, Codex and Google Anti
 
 | Skill | Version | What it does | Ask it like this |
 | --- | --- | --- | --- |
+| [`cd-cesium-vue`](skills/cd-cesium-vue/SKILL.md) | 1.0.0 | Build, configure, debug, or audit Vue 3 + Vite + TypeScript apps using CesiumJS or `vue-cesium`: `CESIUM_BASE_URL` / static asset copy, Ion token security, `shallowRef`/`markRaw` reactivity rules, WebGL/listener cleanup, and render-loop performance. | "Set up CesiumJS in this Vue app" · "Audit our vue-cesium code" |
 | [`cd-new-vue-project`](skills/cd-new-vue-project/SKILL.md) | 1.0.0 | Starts a new company Vue project from our Vue template to company standards: local git (the team pushes to Azure DevOps), hosting secrets in Azure DevOps pipeline variables. Requests that go off standard, like GitHub, are flagged and confirmed rather than refused, and listed in the hand-off. Asks "company or personal?" when the request doesn't say. Extends `gg-new-vue-project`, which does the scaffolding and must be installed alongside it. | "New Vue project called Brief Tracker in ~/Projects" · "Scaffold a component library called cd-ui-kit in D:/Repos" |
 | [`cd-web-a11y-audit`](skills/cd-web-a11y-audit/SKILL.md) | 1.0.0 | WCAG 2.2 AA accessibility audit. **Live:** drives a real browser. **Code:** scans components, CSS, router and templates. **Both:** ties each live issue to the file causing it. | "Run an accessibility audit on https://example.com" · "Accessibility review of this repo" |
 | [`cd-web-security-review`](skills/cd-web-security-review/SKILL.md) | 1.0.0 | Non-destructive OWASP Top 10:2025 review of a live site and/or codebase. Not a pen test. | "Security review of https://example.com, it's my site" · "Security review of this repo" |
@@ -18,6 +19,8 @@ Installed skills cost almost nothing until used: the agent only sees each skill'
 
 | Skill | Mode | Rating | Typical run | What drives the cost |
 | --- | --- | --- | --- | --- |
+| `cd-cesium-vue` | setup / branch | 🟢 Light | 15–45k | Vite config, Cesium composable edits, or branch diff |
+| `cd-cesium-vue` | full audit | 🟡 Medium | 40–100k | Scanner output plus reading Cesium composables and components |
 | `cd-new-vue-project` | – | 🟢 Light | 10–25k | Setup, install, lint and build output (the skill it extends does the work) |
 | `cd-web-security-review` | code | 🟡 Medium | 40–120k | Repo size, dependency and secret scan output |
 | `cd-web-security-review` | live | 🟡 Medium | 60–150k | Command output, in-page kit, a few screenshots |
