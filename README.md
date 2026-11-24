@@ -7,6 +7,10 @@ Our company agent skills, for Claude Code, the Claude app, Codex and Google Anti
 | Skill | Version | What it does | Ask it like this |
 | --- | --- | --- | --- |
 | [`cd-new-vue-project`](skills/cd-new-vue-project/SKILL.md) | 1.0.0 | Starts a new company Vue project from our Vue template to company standards: local git (the team pushes to Azure DevOps), hosting secrets in Azure DevOps pipeline variables. Requests that go off standard, like GitHub, are flagged and confirmed rather than refused, and listed in the hand-off. Asks "company or personal?" when the request doesn't say. Extends `gg-new-vue-project`, which does the scaffolding and must be installed alongside it. | "New Vue project called Brief Tracker in ~/Projects" · "Scaffold a component library called cd-ui-kit in D:/Repos" |
+| [`cd-web-a11y-audit`](skills/cd-web-a11y-audit/SKILL.md) | 1.0.0 | WCAG 2.2 AA accessibility audit. **Live:** drives a real browser. **Code:** scans components, CSS, router and templates. **Both:** ties each live issue to the file causing it. | "Run an accessibility audit on https://example.com" · "Accessibility review of this repo" |
+| [`cd-web-security-review`](skills/cd-web-security-review/SKILL.md) | 1.0.0 | Non-destructive OWASP Top 10:2025 review of a live site and/or codebase. Not a pen test. | "Security review of https://example.com, it's my site" · "Security review of this repo" |
+
+Each review skill picks **live**, **code** or **both** mode from what it has: a URL, the codebase open in the workspace, or both. Live mode needs an agent with a browser (Claude in Chrome, the Claude desktop app's built-in browser, Playwright in Claude Code, or Antigravity's browser). Without one, live mode stops rather than guessing; code mode still works.
 
 ### Token cost
 
@@ -15,8 +19,12 @@ Installed skills cost almost nothing until used: the agent only sees each skill'
 | Skill | Mode | Rating | Typical run | What drives the cost |
 | --- | --- | --- | --- | --- |
 | `cd-new-vue-project` | – | 🟢 Light | 10–25k | Setup, install, lint and build output (the skill it extends does the work) |
+| `cd-web-security-review` | code | 🟡 Medium | 40–120k | Repo size, dependency and secret scan output |
+| `cd-web-security-review` | live | 🟡 Medium | 60–150k | Command output, in-page kit, a few screenshots |
+| `cd-web-a11y-audit` | code | 🟡 Medium | 40–100k | Repo size, scanner output |
+| `cd-web-a11y-audit` | live / both | 🔴 Heavy | 150–400k | Pages × screen sizes: kit injection on each page load, screenshots, page reads |
 
-🟢 under ~50k tokens, fine on every branch · 🟡 ~50–150k, per feature or release · 🔴 over ~150k, run deliberately.
+🟢 under ~50k tokens, fine on every branch · 🟡 ~50–150k, per feature or release · 🔴 over ~150k, run deliberately. These are estimates.
 
 ## Install
 
